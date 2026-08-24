@@ -1,0 +1,1606 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>経営力診断</title>
+<meta name="description" content="スマホだけで、会社の状態を3分でチェックできる経営力診断。原価・人材・業務改善・設備投資・AI活用の5つの領域から、いま取り組むと効果がありそうなところを確認します。">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="経営力診断">
+<meta property="og:description" content="スマホだけで、会社の状態を3分でチェック。いま取り組むと効果がありそうな領域が分かります。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --s1:4px;  --s2:8px;  --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:32px; --s8:40px; --s9:48px; --s10:64px;
+
+  --bg:#F4F3F0; --paper:#FFFFFF;
+  --ink:#17191D; --ink2:#585E66; --ink3:#8A9096;
+  --line:#E5E4E0; --line2:#D3D2CD;
+  --hot:#A8322A;   --hot-bg:#F6E8E6;
+  --warm:#8A5C0E;  --warm-bg:#F6EEDC;
+  --cool:#1B6440;  --cool-bg:#E4EFE8;
+  --shadow:0 1px 1px rgba(20,22,26,.035), 0 8px 24px rgba(20,22,26,.055);
+  --ease:cubic-bezier(.2,.75,.25,1);
+
+  --grad:linear-gradient(180deg, #EFEDE7 0%, #FBFAF8 24%, #FBFAF8 64%, #EBE9E3 100%);
+  --glow:radial-gradient(125% 58% at 50% -6%, #FFFFFF 0%, rgba(255,255,255,0) 58%);
+  --tint:radial-gradient(78% 32% at 50% 17%, rgba(138,92,14,.085) 0%, rgba(138,92,14,0) 72%);
+  --noise-o:.038;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0C0E11; --paper:#15181C;
+    --ink:#EDEFF2; --ink2:#99A0A8; --ink3:#6A7178;
+    --line:#232830; --line2:#31373F;
+    --hot:#EE8B82;   --hot-bg:#2B1613;
+    --warm:#DDB068;  --warm-bg:#261D10;
+    --cool:#6BCB94;  --cool-bg:#112318;
+    --shadow:0 1px 1px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    --grad:linear-gradient(180deg, #0B0D11 0%, #191D24 26%, #191D24 64%, #0A0B0F 100%);
+    --glow:radial-gradient(125% 55% at 50% -6%, rgba(255,255,255,.075) 0%, rgba(255,255,255,0) 60%);
+    --tint:radial-gradient(78% 32% at 50% 17%, rgba(221,176,104,.075) 0%, rgba(221,176,104,0) 72%);
+    --noise-o:.05;
+  }
+}
+/* 判定色を画面全体の温度として使う */
+body[data-tone="hot"]{  --tint:radial-gradient(78% 32% at 50% 17%, rgba(168,50,42,.075) 0%, rgba(168,50,42,0) 72%) }
+body[data-tone="cool"]{ --tint:radial-gradient(78% 32% at 50% 17%, rgba(27,100,64,.075) 0%, rgba(27,100,64,0) 72%) }
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; background:var(--bg)}
+body::after{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:var(--tint), var(--glow), var(--grad);
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  opacity:var(--noise-o);
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+body{
+  margin:0; background:transparent; color:var(--ink);
+  font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  font-size:16px; line-height:1.9; font-weight:400; letter-spacing:.012em;
+  line-break:strict; overflow-wrap:break-word;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.n{font-family:"Inter","Noto Sans JP",sans-serif; font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
+:focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:2px}
+::selection{background:var(--ink); color:var(--bg)}
+button{font-family:inherit; -webkit-tap-highlight-color:transparent}
+
+/* ---------- ヘッダー ---------- */
+.hd{
+  position:sticky; top:0; z-index:20; background:var(--paper);
+  border-bottom:1px solid transparent;
+  transition:border-color .25s var(--ease);
+  padding-top:env(safe-area-inset-top);
+}
+@supports (background:color-mix(in srgb, red 50%, transparent)){
+  .hd{
+    background:color-mix(in srgb, var(--paper) 86%, transparent);
+    -webkit-backdrop-filter:saturate(1.6) blur(12px); backdrop-filter:saturate(1.6) blur(12px);
+  }
+}
+.hd.stuck{border-bottom-color:var(--line)}
+.hd[hidden]{display:none}
+.hd-in{
+  max-width:640px; margin:0 auto; padding:var(--s3) var(--s5); min-height:48px;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:var(--s3);
+}
+.hd-back{
+  border:0; background:none; padding:var(--s2) var(--s2) var(--s2) 0; margin-left:-2px;
+  color:var(--ink2); font-size:13.5px; font-weight:500; letter-spacing:.02em; cursor:pointer;
+  display:inline-flex; align-items:center; gap:5px; transition:color .15s var(--ease);
+}
+.hd-back:hover{color:var(--ink)}
+.hd-back svg{width:14px; height:14px}
+.hd-ttl{
+  font-size:12.5px; font-weight:500; color:var(--ink3); letter-spacing:.04em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center;
+}
+.hd-ct{font-size:11.5px; font-weight:500; color:var(--ink3); letter-spacing:.02em; justify-self:end}
+.pg{height:2px; background:var(--line)}
+.pg > i{display:block; height:100%; background:var(--ink2); width:0; transition:width .35s var(--ease)}
+
+/* ---------- 枠 ---------- */
+.wrap{max-width:640px; margin:0 auto; padding:var(--s7) var(--s5) calc(var(--s10) + env(safe-area-inset-bottom))}
+.k{font-size:11px; font-weight:700; color:var(--ink3); letter-spacing:.18em; margin:0 0 var(--s3)}
+h1{font-size:25px; font-weight:700; line-height:1.45; letter-spacing:.005em; margin:0 0 var(--s2); word-break:auto-phrase}
+.meta{font-size:13px; font-weight:500; color:var(--ink3); letter-spacing:.03em; line-height:1.7; margin:0 0 var(--s7)}
+.tagline{font-size:18px; font-weight:500; line-height:1.7; margin:0 0 var(--s4); word-break:auto-phrase}
+.intro{font-size:15.5px; line-height:1.9; color:var(--ink2); margin:0 0 var(--s6)}
+.ul{margin:0; padding:0; list-style:none}
+.ul li{
+  font-size:14.5px; line-height:1.8; color:var(--ink2);
+  padding-left:15px; position:relative; margin-bottom:var(--s2);
+}
+.ul li:last-child{margin-bottom:0}
+.ul li::before{content:""; position:absolute; left:2px; top:12px; width:4px; height:4px; border-radius:50%; background:var(--ink3)}
+.sec{margin:var(--s9) 0 0}
+.sec > .k{padding-bottom:var(--s3); border-bottom:1px solid var(--line2); margin-bottom:var(--s5)}
+
+/* ---------- 設問 ---------- */
+.q{font-size:21px; font-weight:700; line-height:1.6; letter-spacing:.005em; margin:var(--s1) 0 var(--s2); word-break:auto-phrase}
+.qn{font-size:13.5px; color:var(--ink3); line-height:1.7; margin:0 0 var(--s5); font-weight:500}
+.q + .opts{margin-top:var(--s6)}
+.opts{margin:0}
+.opt{
+  display:flex; align-items:center; gap:var(--s3); width:100%; text-align:left;
+  background:var(--paper); border:1px solid var(--line2); border-radius:5px;
+  padding:var(--s4) var(--s4); margin:0 0 var(--s2); min-height:60px;
+  font-size:15.5px; line-height:1.6; color:var(--ink); cursor:pointer; letter-spacing:.01em;
+  transition:border-color .15s var(--ease), background .15s var(--ease), transform .1s var(--ease);
+}
+.opt:hover{border-color:var(--ink3)}
+.opt:active{transform:scale(.99)}
+.opt.on{border-color:var(--ink); background:var(--paper); font-weight:700; box-shadow:inset 0 0 0 1px var(--ink)}
+.opt .mk{
+  flex:0 0 auto; width:20px; height:20px; border-radius:50%;
+  border:1.5px solid var(--line2); position:relative; transition:.15s var(--ease);
+}
+.opt.sq .mk{border-radius:4px}
+.opt.on .mk{border-color:var(--ink); background:var(--ink)}
+.opt.on .mk::after{
+  content:""; position:absolute; left:6.5px; top:3px; width:5px; height:10px;
+  border:solid var(--paper); border-width:0 2px 2px 0; transform:rotate(45deg);
+}
+.opt .lb{flex:1 1 auto}
+
+/* ---------- ボタン ---------- */
+.btn{
+  display:flex; align-items:center; justify-content:center; width:100%;
+  min-height:56px; padding:var(--s4) var(--s5); border:0; border-radius:5px;
+  background:var(--ink); color:var(--paper);
+  font-size:16px; font-weight:700; letter-spacing:.04em;
+  text-decoration:none; cursor:pointer;
+  transition:transform .12s var(--ease), opacity .15s var(--ease);
+}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.3; cursor:default}
+.btn.ghost{background:transparent; color:var(--ink2); border:1px solid var(--line2); font-weight:500}
+.btn.ghost:hover{color:var(--ink); border-color:var(--ink3)}
+.btn + .btn{margin-top:var(--s3)}
+.btnrow{margin-top:var(--s6)}
+
+/* ---------- スコア ---------- */
+.score{
+  background:var(--paper); border:1px solid var(--line); border-radius:6px;
+  padding:var(--s5) var(--s5) var(--s6); margin:0 0 var(--s7); box-shadow:var(--shadow);
+}
+.score .k{margin-bottom:var(--s4)}
+.score-main{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s4); margin-bottom:var(--s6)}
+.score-v{display:flex; align-items:baseline; gap:2px; line-height:1; margin:0}
+.score-v .big{font-size:72px; font-weight:600; letter-spacing:-.035em; line-height:.86}
+.score-v .den{font-size:15px; font-weight:500; color:var(--ink3); letter-spacing:0}
+.badge{
+  flex:0 0 auto; margin-bottom:6px; font-size:12.5px; font-weight:700;
+  letter-spacing:.04em; padding:5px 11px; border-radius:3px; white-space:nowrap;
+}
+.badge.hot{color:var(--hot); background:var(--hot-bg)}
+.badge.warm{color:var(--warm); background:var(--warm-bg)}
+.badge.cool{color:var(--cool); background:var(--cool-bg)}
+.gauge{position:relative; padding-top:14px}
+.gauge-bar{display:flex; gap:2px; height:7px}
+.gauge-bar > span{background:var(--line); border-radius:1.5px}
+.gauge-bar > span:first-child{border-radius:4px 1.5px 1.5px 4px}
+.gauge-bar > span:last-child{border-radius:1.5px 4px 4px 1.5px}
+.gauge-bar > span.on.hot{background:var(--hot)}
+.gauge-bar > span.on.warm{background:var(--warm)}
+.gauge-bar > span.on.cool{background:var(--cool)}
+.pin{
+  position:absolute; top:0; width:0; height:0;
+  border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--ink);
+  transform:translateX(-50%); opacity:0; animation:pinIn .5s .35s var(--ease) forwards;
+}
+@keyframes pinIn{from{opacity:0; transform:translateX(-50%) translateY(-4px)} to{opacity:1; transform:translateX(-50%)}}
+.gauge-sc{position:relative; height:16px; margin-top:7px}
+.gauge-sc b{
+  position:absolute; top:0; transform:translateX(-50%); font-size:10px; font-weight:500;
+  color:var(--line2); font-family:"Inter",sans-serif; font-variant-numeric:tabular-nums;
+}
+.gauge-sc b:first-child{transform:none}
+.gauge-sc b:last-child{transform:translateX(-100%)}
+
+/* ---------- 現在の状態 ---------- */
+.verdict{margin-top:var(--s6); padding-top:var(--s5); border-top:1px solid var(--line)}
+.lede{font-size:17.5px; font-weight:700; line-height:1.7; margin:0 0 var(--s3); word-break:auto-phrase}
+.lede-sub{font-size:14.5px; line-height:1.8; color:var(--ink2); margin:0 0 var(--s5)}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:var(--s4)}
+.split.one{grid-template-columns:1fr}
+.sp + .sp{border-left:1px solid var(--line); padding-left:var(--s4)}
+@media (max-width:359px){
+  .split{grid-template-columns:1fr}
+  .sp + .sp{border-left:0; border-top:1px solid var(--line); padding-left:0; padding-top:var(--s4)}
+}
+.sp-k{display:flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; letter-spacing:.09em; margin:0 0 var(--s2); line-height:1}
+.sp-k svg{width:13px; height:13px; flex:0 0 auto}
+.sp.done .sp-k{color:var(--cool)}
+.sp.next .sp-k{color:var(--hot)}
+.sp-t{font-size:14px; font-weight:500; line-height:1.65; margin:0}
+
+/* ---------- 内訳 ---------- */
+.it{margin-bottom:var(--s5)}
+.it-h{display:flex; align-items:baseline; justify-content:space-between; gap:var(--s3); margin-bottom:var(--s2)}
+.it-n{font-size:14.5px; font-weight:500; line-height:1.55}
+.it-v{flex:0 0 auto; font-size:15px; font-weight:600; color:var(--ink2)}
+.it-b{height:6px; background:var(--line); border-radius:3px; overflow:hidden}
+.it-b > i{display:block; height:100%; border-radius:3px; background:var(--ink2); width:var(--w); animation:grow .85s var(--ease) both}
+@keyframes grow{from{width:0} to{width:var(--w)}}
+.it:nth-child(2) .it-b > i{animation-delay:.05s}
+.it:nth-child(3) .it-b > i{animation-delay:.1s}
+.it:nth-child(4) .it-b > i{animation-delay:.15s}
+.it:nth-child(5) .it-b > i{animation-delay:.2s}
+.it.pri{border-left:2px solid var(--hot); padding:var(--s1) 0 var(--s2) var(--s4); margin:calc(var(--s1) * -1) 0 var(--s5)}
+.it.pri .it-n{font-weight:700}
+.it.pri .it-v{color:var(--hot); font-weight:700}
+.it.pri .it-b > i{background:var(--hot)}
+.it-tag{margin:var(--s3) 0 0; font-size:11px; font-weight:700; color:var(--hot); letter-spacing:.08em; line-height:1}
+
+/* ---------- 打ち手 ---------- */
+.act-lead{font-size:12.5px; font-weight:700; color:var(--ink3); letter-spacing:.06em; margin:0 0 var(--s1)}
+.act-item{font-size:14.5px; font-weight:700; color:var(--hot); margin:0 0 var(--s4); line-height:1.6; word-break:auto-phrase}
+.act{font-size:18px; font-weight:500; line-height:1.75; margin:0; word-break:auto-phrase}
+.act em{font-style:normal; font-weight:700; background:linear-gradient(transparent 62%, var(--warm-bg) 62%); padding:0 1px}
+.ai{margin:var(--s5) 0 0; background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:var(--s4) var(--s5)}
+.ai-k{font-size:11px; font-weight:700; letter-spacing:.16em; color:var(--ink3); margin:0 0 var(--s2)}
+.ai-t{font-size:14.5px; line-height:1.85; color:var(--ink2); margin:0}
+
+/* ---------- ランキング ---------- */
+.rk{padding:var(--s5) 0; border-top:1px solid var(--line2)}
+.rk:first-of-type{border-top-width:2px; border-top-color:var(--ink)}
+.rk-h{display:flex; align-items:baseline; gap:var(--s3); margin-bottom:var(--s2)}
+.rk-no{font-size:13px; font-weight:700; color:var(--ink3); font-family:"Inter",sans-serif; letter-spacing:.02em; flex:0 0 auto}
+.rk-n{font-size:19px; font-weight:700; line-height:1.45; flex:1 1 auto; word-break:auto-phrase}
+.rk-j{font-size:12px; font-weight:700; letter-spacing:.04em; margin:0 0 var(--s3); padding-left:calc(var(--s3) + 22px)}
+.rk-j.hot{color:var(--hot)} .rk-j.warm{color:var(--warm)} .rk-j.cool{color:var(--cool)}
+.rk-body{padding-left:calc(var(--s3) + 22px)}
+.rs{margin:0 0 var(--s4); padding:0; list-style:none}
+.rs li{font-size:14.5px; color:var(--ink2); line-height:1.75; padding-left:14px; position:relative; margin-bottom:2px}
+.rs li::before{content:""; position:absolute; left:2px; top:11px; width:4px; height:4px; border-radius:50%; background:var(--ink3)}
+.rk-t{font-size:14.5px; color:var(--ink2); line-height:1.8; margin:0 0 var(--s4)}
+
+/* ---------- 補助 ---------- */
+.card{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:var(--s5); margin:0 0 var(--s3)}
+.card h3{margin:0 0 var(--s2); font-size:16px; font-weight:700}
+.card p{margin:0 0 var(--s4); font-size:14.5px; line-height:1.8; color:var(--ink2)}
+.card p:last-child{margin-bottom:0}
+.pending{border:1px dashed var(--line2); border-radius:5px; padding:var(--s4) var(--s5); font-size:14px; line-height:1.85; color:var(--ink2)}
+
+/* ---------- 入力フォーム ---------- */
+.field{margin:0 0 var(--s5)}
+.field > label{display:block; font-size:13px; font-weight:700; letter-spacing:.02em; margin:0 0 var(--s2)}
+.req{font-size:10.5px; font-weight:700; color:var(--hot); margin-left:6px; letter-spacing:.06em}
+.opt-mark{font-size:10.5px; font-weight:500; color:var(--ink3); margin-left:6px; letter-spacing:.06em}
+.field input, .field textarea{
+  width:100%; padding:14px var(--s4); border:1px solid var(--line2); border-radius:5px;
+  background:var(--paper); color:var(--ink);
+  font-family:inherit; font-size:16px; line-height:1.7; letter-spacing:.01em;
+  transition:border-color .15s var(--ease);
+}
+.field input:focus, .field textarea:focus{outline:none; border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink)}
+.field textarea{min-height:120px; resize:vertical}
+.field.err input, .field.err textarea{border-color:var(--hot)}
+.field .msg{font-size:12.5px; color:var(--hot); font-weight:500; margin:var(--s2) 0 0; display:none}
+.field.err .msg{display:block}
+.formnote{
+  background:var(--paper); border:1px solid var(--line); border-radius:5px;
+  padding:var(--s4) var(--s5); margin:0 0 var(--s5);
+  font-size:13.5px; line-height:1.8; color:var(--ink2);
+}
+.formnote b{color:var(--ink); font-weight:700}
+.sendbox{margin-top:var(--s6)}
+.sendbox .err-all{
+  font-size:13.5px; color:var(--hot); font-weight:500; line-height:1.7;
+  margin:var(--s3) 0 0; display:none;
+}
+.sendbox.failed .err-all{display:block}
+details.peek{margin:0 0 var(--s5); border:1px solid var(--line); border-radius:5px; background:var(--paper)}
+details.peek > summary{
+  cursor:pointer; padding:var(--s4) var(--s5); font-size:13.5px; font-weight:700;
+  list-style:none; display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+}
+details.peek > summary::-webkit-details-marker{display:none}
+details.peek > summary::after{content:"開く"; font-size:12px; font-weight:500; color:var(--ink3)}
+details.peek[open] > summary::after{content:"閉じる"}
+details.peek .peek-body{
+  padding:0 var(--s5) var(--s5); margin:0;
+  font-size:12.5px; line-height:1.9; color:var(--ink2);
+  white-space:pre-wrap; word-break:break-all;
+  font-family:"Inter","Noto Sans JP",monospace;
+}
+.note{background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:var(--s4) var(--s5); font-size:14.5px; line-height:1.85; color:var(--ink2); margin:0 0 var(--s4)}
+.note b{color:var(--ink); font-weight:700}
+.foot{margin:var(--s9) 0 0; padding-top:var(--s5); border-top:1px solid var(--line); font-size:11.5px; line-height:1.85; color:var(--ink3)}
+.fade{animation:fade .25s var(--ease)}
+@keyframes fade{from{opacity:0; transform:translateY(5px)} to{opacity:1; transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+  .pin{opacity:1}
+  .it-b > i{width:var(--w)}
+}
+@media print{ .hd,.btn,.pending{display:none} body::before,body::after{display:none} }
+@media (min-width:640px){
+  .wrap{padding-top:var(--s8)}
+  h1{font-size:28px}
+  .q{font-size:23px}
+  .score-v .big{font-size:80px}
+}
+</style>
+</head>
+<body>
+<header class="hd" id="hd" hidden>
+  <div class="hd-in">
+    <button class="hd-back" id="back" type="button">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      戻る
+    </button>
+    <span class="hd-ttl" id="hdttl"></span>
+    <span class="hd-ct n" id="hdct"></span>
+  </div>
+  <div class="pg"><i id="pg"></i></div>
+</header>
+<main class="wrap" id="screen" aria-live="polite"></main>
+
+<script>
+"use strict";
+
+/* ============================================================
+   相談の受け口（Googleフォーム等）のURL。
+   ここに1か所URLを入れると、画面内のすべての相談ボタンが有効になる。
+   空のままなら「準備中」の案内が表示され、リンクは出ない。
+   ============================================================ */
+var FORM_ENDPOINT = "https://formspree.io/f/xppaenjb";
+
+/* 送信元の区別。受信メールの件名と本文の先頭に入る */
+var FORM_SOURCE = "経営力診断";
+
+/* 財務・資金繰りの相談は既存の財務診断ツールへ誘導する */
+var ZAIMU_URL = "https://satosato202525-crypto.github.io/zaimu-shindan/";
+
+/* ============================================================
+   1. 基本データ
+   ============================================================ */
+
+/* 業種（表示は14分類・内部は5グループ） */
+var GYOSHU = [
+  {id:"seizo",     label:"製造業",           g:"seizo"},
+  {id:"shokuhin",  label:"食品製造業",       g:"seizo", shokuhin:true},
+  {id:"kensetsu",  label:"建設業",           g:"kensetsu"},
+  {id:"oroshi",    label:"卸売業",           g:"kouri"},
+  {id:"kouri",     label:"小売業",           g:"kouri"},
+  {id:"inshoku",   label:"飲食業",           g:"service"},
+  {id:"shukuhaku", label:"宿泊業",           g:"service"},
+  {id:"unyu",      label:"運輸・物流業",     g:"unyu"},
+  {id:"it",        label:"IT・情報通信業",   g:"service"},
+  {id:"iryo",      label:"医療・介護・福祉", g:"service"},
+  {id:"fudosan",   label:"不動産業",         g:"service"},
+  {id:"senmon",    label:"専門サービス業",   g:"service"},
+  {id:"service",   label:"その他サービス業", g:"service"},
+  {id:"other",     label:"その他",           g:"service"}
+];
+
+/* 業種グループごとの表示語。設問文の {{key}} を置き換える */
+var TERMS = {
+  seizo:{
+    genba:"現場", sagyo:"作業", tejun:"作業手順", tani:"工程",
+    keikaku:"生産計画", teishi:"設備の停止や手待ち", kirikae:"段取り替え",
+    dosen:"工場のレイアウト", tairyu:"原材料・仕掛品・完成品",
+    hinshitsu:"品質・作業ルール", nebiki:"取引先への交渉資料"
+  },
+  shokuhin:{
+    genba:"現場", sagyo:"作業", tejun:"作業手順（衛生ルールを含む）", tani:"工程",
+    keikaku:"生産計画", teishi:"設備の停止や手待ち", kirikae:"段取り替え",
+    dosen:"工場のレイアウト", tairyu:"原材料・仕掛品・完成品",
+    hinshitsu:"品質・衛生ルール", nebiki:"取引先への交渉資料"
+  },
+  kouri:{
+    genba:"業務", sagyo:"業務", tejun:"業務手順", tani:"業務",
+    keikaku:"発注や売場作業の予定", teishi:"レジや補充の待ち時間", kirikae:"品出し・陳列の切り替え",
+    dosen:"バックヤードと売場の流れ", tairyu:"在庫や補充待ちの商品",
+    hinshitsu:"品質・作業ルール", nebiki:"価格改定を判断する根拠"
+  },
+  service:{
+    genba:"業務", sagyo:"業務", tejun:"業務手順・接客手順", tani:"業務",
+    keikaku:"予定していた案件数", teishi:"手待ちや待機の時間", kirikae:"案件の準備・切り替え",
+    dosen:"事務所と作業の流れ", tairyu:"未処理・対応待ちの案件",
+    hinshitsu:"品質・作業ルール", nebiki:"価格改定を判断する根拠"
+  },
+  kensetsu:{
+    genba:"現場", sagyo:"作業", tejun:"施工手順・安全ルール", tani:"職種",
+    keikaku:"工程表", teishi:"手待ちや天候待ちの時間", kirikae:"現場の準備・資材手配",
+    dosen:"資材置き場と作業動線", tairyu:"資材や未完了の作業",
+    hinshitsu:"品質・安全ルール", nebiki:"発注者への説明資料"
+  },
+  unyu:{
+    genba:"現場", sagyo:"業務", tejun:"作業手順", tani:"業務",
+    keikaku:"運行・配車の計画", teishi:"手待ちや待機の時間", kirikae:"積み替え・切り替え",
+    dosen:"倉庫と積み込みの動線", tairyu:"荷待ち・未配送の荷物",
+    hinshitsu:"品質・安全ルール", nebiki:"荷主への説明資料"
+  }
+};
+
+/* 商売の型（複数選択可） */
+var KATA = [
+  {id:"btob",    label:"法人向けの販売・取引が中心"},
+  {id:"btoc",    label:"一般消費者向けの販売が中心"},
+  {id:"anken",   label:"案件・受注ごとに仕事を請け負う"},
+  {id:"tenpo",   label:"店舗で商品・サービスを提供する"},
+  {id:"ec",      label:"EC・オンラインで販売する"},
+  {id:"keizoku", label:"継続契約・月額契約が中心"},
+  {id:"other",   label:"その他"}
+];
+/* 複数選択されたときは、最も特殊な採算の見方を必要とする型に合わせる */
+var KATA_PRIORITY = ["anken","btob","tenpo","ec","keizoku","btoc","other"];
+/* 商売の型 → 分野1・設問5の分岐 */
+var KATA_TO_TYPE = {
+  anken:"anken", btob:"torihiki", tenpo:"tenpo",
+  ec:"shohin", keizoku:"torihiki", btoc:"shohin", other:"torihiki"
+};
+
+/* 気になっている経営課題（最大2つ・採点外） */
+var KADAI = [
+  {id:"f1",        label:"利益・原価・値決め"},
+  {id:"f2",        label:"人材育成・技術継承"},
+  {id:"f3",        label:"生産性・業務効率"},
+  {id:"f4",        label:"設備投資・設備更新"},
+  {id:"f5",        label:"AI・デジタル化"},
+  {id:"quality",   label:"品質"},
+  {id:"shinshohin",label:"売上・商品開発"},
+  {id:"shikin",    label:"資金繰り"},
+  {id:"saiyo",     label:"採用・人材定着"},
+  {id:"keikaku",   label:"経営計画・戦略"},
+  {id:"shokei",    label:"事業承継"},
+  {id:"bcp",       label:"BCP・災害対策"},
+  {id:"etc",       label:"その他"},
+  {id:"none",      label:"特に決まっていない", solo:true}
+];
+
+/* 分野のメタ情報
+   detail : 詳細診断があるか
+   plan   : 詳細診断がない場合の案内文の種類（A=準備中／B=作る予定なし）        */
+var FIELDS = {
+  f1:{ name:"利益・原価・値決め", detail:true,
+       sum:{ low:"利益の全体像が、まだ数字になっていない可能性があります",
+             mid:"利益は見えていますが、商品や取引ごとの採算に改善余地がありそうです",
+             high:"利益の把握はできています。現時点では優先順位は高くなさそうです" } },
+  f2:{ name:"技術継承・人材育成", detail:true,
+       sum:{ low:"特定の人に仕事が依存している可能性があります",
+             mid:"仕組みは一部ありますが、運用にばらつきがありそうです",
+             high:"仕組み化の基盤ができています。現時点では優先順位は高くなさそうです" } },
+  f3:{ name:"{{genba}}改善・生産性", detail:true,
+       sum:{ low:"{{genba}}の状態が数字で見えていない可能性があります",
+             mid:"測ることは始まっていますが、改善が続く仕組みに余地がありそうです",
+             high:"{{genba}}を数字で見る基盤ができています。現時点では優先順位は高くなさそうです" } },
+  f4:{ name:"設備投資", detail:false, plan:"A" },
+  f5:{ name:"AI・デジタル化", detail:false, plan:"A",
+       sum:{ low:"手作業が多く、デジタル化の余地が大きそうです",
+             mid:"一部はデジタル化されていますが、業務の課題解決に結びつける余地がありそうです",
+             high:"ある程度活用できています。現時点では優先順位は高くなさそうです" } },
+  quality:{ name:"品質", detail:false, plan:"A",
+       sum:{ low:"不良やクレームを記録し、原因まで追う仕組みに改善余地がありそうです",
+             mid:"記録はできていますが、原因分析やルールの確認に余地がありそうです",
+             high:"品質を管理する基盤ができています。現時点では優先順位は高くなさそうです" } },
+  shinshohin:{ name:"売上・商品開発", detail:false, plan:"A" },
+  shikin:{  name:"資金繰り",       detail:false, plan:"Z" },
+  saiyo:{   name:"採用・人材定着", detail:false, plan:"B" },
+  keikaku:{ name:"経営計画・戦略", detail:false, plan:"B" },
+  shokei:{  name:"事業承継",       detail:false, plan:"B" },
+  bcp:{     name:"BCP・災害対策",  detail:false, plan:"B" }
+};
+
+/* ============================================================
+   2. 入口診断（STEP2）10問＋製造業のみ品質2問
+   すべて 3 / 2 / 1 / 0 点。fb は結果画面で理由として引用する文
+   ============================================================ */
+var ENTRY = [
+  { id:"e1a", field:"f1",
+    q:"先月、会社としてどのくらい利益が出たか把握していますか",
+    o:[
+      {t:"毎月、数字で把握している", s:3},
+      {t:"多少遅れるが、定期的に把握している", s:2},
+      {t:"決算や税理士から聞いたときに分かる", s:1, fb:"会社全体の利益は、決算のときまで分かりにくい状態です"},
+      {t:"すぐには分からない", s:0, fb:"いま利益が出ているかどうかが、すぐには分からない状態です"}
+    ]},
+  { id:"e1b", field:"f1",
+    q:"どの商品・サービス・取引が利益を生んでいるか把握していますか",
+    o:[
+      {t:"数字で比較できる", s:3},
+      {t:"主力については分かる", s:2},
+      {t:"なんとなく分かる", s:1, fb:"どこで利益が出ているかは、感覚での把握にとどまっています"},
+      {t:"売上しか分からない", s:0, fb:"商品や取引ごとの利益が見えていない状態です"}
+    ]},
+
+  { id:"e2a", field:"f2",
+    q:"特定の人が休んだり辞めたりすると、止まってしまう仕事はありますか",
+    o:[
+      {t:"ほとんどない", s:3},
+      {t:"一部ある", s:2},
+      {t:"いくつもある", s:1, fb:"特定の人に依存する仕事があります"},
+      {t:"多くの仕事がそうなっている", s:0, fb:"多くの仕事が特定の人に依存しています"}
+    ]},
+  { id:"e2b", field:"f2",
+    q:"重要な仕事について、手順や教え方は決まっていますか",
+    o:[
+      {t:"手順・教え方とも決まっており、実際に使われている", s:3},
+      {t:"ある程度決まっている", s:2},
+      {t:"人によって教え方が違う", s:1, fb:"教え方にばらつきがあります"},
+      {t:"基本的に口伝え・見て覚えてもらっている", s:0, fb:"手順が形になっておらず、口伝えが中心になっています"}
+    ]},
+
+  { id:"e3a", field:"f3",
+    q:"主な{{sagyo}}に、どれくらい時間がかかっているか把握していますか",
+    o:[
+      {t:"数字で把握している", s:3},
+      {t:"主要なものだけ測っている", s:2},
+      {t:"感覚では分かる", s:1, fb:"かかっている時間が、感覚での把握にとどまっています"},
+      {t:"測ったことがない", s:0, fb:"{{sagyo}}にかかる時間を測ったことがない状態です"}
+    ]},
+  { id:"e3b", field:"f3",
+    q:"改善した後、本当に効果があったか確認していますか",
+    o:[
+      {t:"前後の数字を比較している", s:3},
+      {t:"主な改善だけ確認している", s:2},
+      {t:"感覚的に確認している", s:1, fb:"改善の効果が数字で確かめられていません"},
+      {t:"特に確認していない", s:0, fb:"改善の効果を確かめる仕組みがありません"}
+    ]},
+
+  { id:"e4a", field:"f4", noscore:true,
+    q:"今後1〜3年で、設備・機器・システムの導入や更新を考えていますか",
+    o:[
+      {t:"具体的な計画がある"},
+      {t:"検討している"},
+      {t:"必要性は感じている"},
+      {t:"今のところ予定はない"}
+    ]},
+  { id:"e4b", field:"f4",
+    q:"設備などに投資するとき、どれくらい効果が出るか数字で検討していますか",
+    o:[
+      {t:"効果・投資額・回収期間まで比較している", s:3},
+      {t:"おおよその効果と投資額を比較している", s:2},
+      {t:"必要性を中心に判断している", s:1},
+      {t:"明確な基準はない", s:0}
+    ]},
+
+  { id:"e5a", field:"f5",
+    q:"転記・集計・検索など、人が繰り返している定型作業はデジタル化されていますか",
+    o:[
+      {t:"多くが自動化・効率化されている", s:3},
+      {t:"一部はデジタル化している", s:2},
+      {t:"Excel等は使うが、手作業が多い", s:1, fb:"転記や集計に手作業が多く残っています"},
+      {t:"紙・手入力・転記が多い", s:0, fb:"紙や手入力での作業が多く残っています"}
+    ]},
+  { id:"e5b", field:"f5",
+    q:"AIやデジタルツールを、具体的な業務課題の改善に使っていますか",
+    o:[
+      {t:"実際に活用し、効果も確認している", s:3},
+      {t:"一部で試している", s:2},
+      {t:"個人では使うが、会社としては未活用", s:1, fb:"個人では使われていますが、会社としての活用はこれからです"},
+      {t:"ほとんど使っていない", s:0, fb:"AIやデジタルツールはほとんど使われていません"}
+    ]},
+
+  { id:"eq1", field:"quality", seizoOnly:true,
+    q:"不良やクレームについて、原因まで記録・分析していますか",
+    o:[
+      {t:"記録し、原因分析・再発防止までしている", s:3},
+      {t:"記録と原因確認はしている", s:2},
+      {t:"発生件数だけ記録している", s:1, fb:"件数は分かっても、原因までは追えていません"},
+      {t:"十分に記録していない", s:0, fb:"不良やクレームの記録が十分に残っていません"}
+    ]},
+  { id:"eq2", field:"quality", seizoOnly:true,
+    q:"決めた{{hinshitsu}}が守られているか確認していますか",
+    o:[
+      {t:"定期的に確認している", s:3},
+      {t:"問題があったときに確認する", s:2},
+      {t:"基本的に現場任せ", s:1, fb:"決めたルールの実行が現場任せになっています"},
+      {t:"特に確認していない", s:0, fb:"決めたルールが守られているかの確認がありません"}
+    ]}
+];
+/* ============================================================
+   3. 詳細診断
+   carry : 入口診断の回答を引き継ぐ設問（同じことを二度聞かない）
+   qBy / oBy : 業種グループ別の差し替え
+   ============================================================ */
+var DETAIL = {
+
+/* ---------- 分野1：利益が見えない・値上げできない ---------- */
+f1:{
+  title:"利益が見えない・値上げできない",
+  lead:"利益を数字で把握し、価格・商品・取引の判断に使えているかを見ます。全12問・約3分。",
+  screening:{
+    carry:"e1a",
+    q:"先月どれくらい利益が出たか、現在把握できていますか",
+    o:[{t:"金額まで把握している"},{t:"おおよそ把握している"},{t:"決算まで分からない"},{t:"正直わからない"}]
+  },
+  blocks:[
+    {n:"原価を数字でつかめている", qs:[0,1,2]},
+    {n:"どこで利益が出ているか分かる", qs:[3,4,5]},
+    {n:"価格決めに数値的な根拠がある", qs:[6,7,8]},
+    {n:"数字を経営判断に使えている", qs:[9,10,11]}
+  ],
+  qs:[
+    { q:"商品・サービスごとの原価を出していますか",
+      qBy:{kouri:"商品カテゴリごとの粗利率を出していますか",
+           service:"案件ごとの原価を出していますか",
+           kensetsu:"工事ごとの原価を出していますか"},
+      o:[{t:"商品ごとに出している",s:3},{t:"主力商品だけ出している",s:2},
+         {t:"全体は分かるが、商品別にはない",s:1},{t:"出していない",s:0}],
+      oBy:{
+        kouri:[{t:"カテゴリごとに出している",s:3},{t:"主力カテゴリだけ出している",s:2},
+               {t:"全体の粗利率は分かるが、カテゴリ別にはない",s:1},{t:"出していない",s:0}],
+        service:[{t:"案件ごとに出している",s:3},{t:"主な案件だけ出している",s:2},
+                 {t:"全体は分かるが、案件別にはない",s:1},{t:"出していない",s:0}],
+        kensetsu:[{t:"工事ごとに出している",s:3},{t:"主な工事だけ出している",s:2},
+                  {t:"全体は分かるが、工事別にはない",s:1},{t:"出していない",s:0}]
+      }},
+    { q:"どこまで原価に入れていますか",
+      o:[{t:"材料・仕入に加え、作業時間に応じた人件費まで入れている",s:3},
+         {t:"材料・仕入に加え、人件費をざっくり入れている",s:2},
+         {t:"材料・仕入だけ",s:1},{t:"特に計算していない",s:0}],
+      oBy:{
+        seizo:[{t:"材料費に加え、工場の人件費・光熱費まで入れている",s:3},
+               {t:"材料費に加え、人件費をざっくり入れている",s:2},
+               {t:"材料費・仕入だけ",s:1},{t:"特に計算していない",s:0}],
+        kouri:[{t:"仕入原価に加え、物流費・保管費まで入れている",s:3},
+               {t:"仕入原価に加え、人件費をざっくり入れている",s:2},
+               {t:"仕入原価だけ",s:1},{t:"特に計算していない",s:0}],
+        service:[{t:"外部への支払いに加え、1件あたりにかかる人の時間まで入れている",s:3},
+                 {t:"外部への支払いに加え、人件費をざっくり入れている",s:2},
+                 {t:"外部への支払いだけ",s:1},{t:"特に計算していない",s:0}],
+        kensetsu:[{t:"材料費・外注費に加え、現場の間接費まで入れている",s:3},
+                  {t:"材料費・外注費に加え、人件費をざっくり入れている",s:2},
+                  {t:"材料費・外注費だけ",s:1},{t:"特に計算していない",s:0}],
+        unyu:[{t:"燃料費・外注費に加え、車両費や人件費まで入れている",s:3},
+              {t:"燃料費・外注費に加え、人件費をざっくり入れている",s:2},
+              {t:"燃料費・外注費だけ",s:1},{t:"特に計算していない",s:0}]
+      },
+      oByShokuhin:[{t:"材料費に加え、人件費・光熱費・歩留まりロスまで入れている",s:3},
+                   {t:"材料費に加え、人件費・光熱費をざっくり入れている",s:2},
+                   {t:"材料費・仕入だけ",s:1},{t:"特に計算していない",s:0}]},
+    { q:"原価を計算し直すのは、どんなときですか",
+      o:[{t:"定期的に見直している",s:3},{t:"仕入価格が変わったとき",s:2},
+         {t:"新商品のときだけ",s:1},{t:"最初に決めてから変えていない",s:0}]},
+
+    { q:"商品・サービスごとの利益率を比較し、注力する商品を判断していますか",
+      o:[{t:"比較して、注力する商品を決めている",s:3},
+         {t:"利益率は分かるが、判断には使えていない",s:2},
+         {t:"主力商品だけ利益率が分かる",s:1},{t:"比較していない",s:0}]},
+    { type:"kata" },  /* 設問5：商売の型で差し替え（下の KATA_Q5 を使う） */
+    { q:"利益が増えた・減った理由を、数字で説明できますか",
+      o:[{t:"売上・単価・原価などに分けて説明できる",s:3},{t:"大きな要因は分かる",s:2},
+         {t:"感覚的には分かる",s:1},{t:"分からない",s:0}]},
+
+    { q:"値段を決めるとき、原価と必要な利益を確認していますか",
+      o:[{t:"原価・必要な利益・市場価格を見て判断している",s:3},
+         {t:"原価と必要な利益を見ている",s:2},
+         {t:"相場や過去の価格を中心に決めている",s:1},{t:"明確な基準がない",s:0}]},
+    { q:"原価や市場環境が変わったとき、販売価格を見直していますか",
+      o:[{t:"必要に応じて見直し、実際に変更している",s:3},
+         {t:"見直しはするが、変更できないこともある",s:2},
+         {t:"原価が上がったときだけ検討する",s:1},{t:"基本的に見直していない",s:0}]},
+    { q:"価格を変更するとき、その根拠を説明できる状態になっていますか",
+      note:"{{nebiki}}として使える状態か、という意味です",
+      o:[{t:"資料として示せる状態にある",s:3},{t:"口頭で説明できる",s:2},
+         {t:"社内では分かるが、外には説明しにくい",s:1},{t:"根拠を整理していない",s:0}]},
+
+    { q:"赤字の商品や取引が見つかったとき、どのように対応していますか",
+      o:[{t:"原因を確認し、値上げ・原価低減・撤退などを判断する",s:3},
+         {t:"改善には取り組んでいる",s:2},
+         {t:"赤字と分かっていても、そのままになっている",s:1},
+         {t:"赤字かどうか把握していない",s:0}]},
+    { q:"売上や利益について、計画と実績の差を毎月確認していますか",
+      o:[{t:"毎月比較し、差の原因まで確認している",s:3},{t:"毎月比較している",s:2},
+         {t:"時々確認している",s:1},{t:"比較していない",s:0}]},
+    { q:"毎月、最低どれくらい売上があれば利益が出るか把握していますか",
+      o:[{t:"目安を把握し、社内でも共有している",s:3},{t:"おおよそ把握している",s:2},
+         {t:"決算のときに分かる程度",s:1},{t:"把握していない",s:0}]}
+  ],
+  pain:{ q:"原価や値決めについて、いま困っていることはありますか",
+    o:["特にない","原料・仕入価格の上昇","値上げ交渉が通らない",
+       "どの商品が儲かっているか分からない","人件費の上昇","利益が出ているのか分からない"]},
+  bands:[
+    {max:30,  t:"利益の全体像が、まだ数字になっていない状態です", tone:"hot"},
+    {max:60,  t:"原価は出せていますが、判断に使うところまで届いていない状態です", tone:"warm"},
+    {max:85,  t:"分析はできています。値決めと予実管理に活かす段階です", tone:"cool"},
+    {max:100, t:"数字が経営判断に使えている状態です", tone:"cool"}
+  ],
+  firstBy:"block",
+  first:[
+    {do:"全商品は不要です。まず<b>主力3商品だけ</b>原価を出してみてください。",
+     ai:"レシートや請求書の読み取りを自動化すれば、原価集計の手間が大きく減ります。"},
+    {do:"商品別・取引先別の利益を並べた<b>1枚の表</b>を作ってみてください。",
+     ai:"販売データからの集計と並べ替えを自動化できます。"},
+    {do:"原価と売価を並べ、必要な利益が乗っているか確認してみてください。",
+     ai:"価格改定の根拠資料の下書きを作れます。"},
+    {do:"月次で計画と実績を比べてみてください。<b>まず売上と粗利だけ</b>で構いません。",
+     ai:"差異の要因分解とコメントの下書きを自動化できます。"}
+  ]
+},
+
+/* ---------- 分野2：技術が伝わらない・人が育たない ---------- */
+f2:{
+  title:"技術が伝わらない・人が育たない",
+  lead:"人が替わっても同じ仕事ができる状態になっているかを見ます。全10問・約3分。",
+  screening:{
+    carry:"e2a",
+    q:"その人が辞めたら止まってしまう仕事は、社内にありますか",
+    o:[{t:"ない。誰でも代われる"},{t:"1〜2か所ある"},{t:"いくつもある"},{t:"ほとんどの仕事がそう"}]
+  },
+  blocks:[
+    {n:"仕事のやり方が決まっている", qs:[0,1,2,3]},
+    {n:"教える仕組みがある", qs:[4,5,6]},
+    {n:"代わりのきく人がいる", qs:[7,8]},
+    {n:"技術を引き継ぐ準備がある", qs:[9]}
+  ],
+  qs:[
+    { q:"売上・品質・納期に大きく影響する重要な{{sagyo}}を特定していますか",
+      o:[{t:"明確になっていて、優先して教育している",s:3},{t:"分かっている",s:2},
+         {t:"なんとなく分かる",s:1},{t:"考えたことがない",s:0}]},
+    { q:"{{tejun}}は、どんな形で残っていますか",
+      o:[{t:"文書や動画があり、変更のたびに更新している",s:3},
+         {t:"文書はあるが、作ったきりで古い",s:2},
+         {t:"一部だけ文書がある",s:1},{t:"すべて口伝え",s:0}]},
+    { q:"同じ{{sagyo}}を、人によって違うやり方でしていませんか",
+      o:[{t:"やり方が決まっていて揃っている",s:3},{t:"大筋は同じだが、細部は人による",s:2},
+         {t:"人によってかなり違う",s:1},{t:"気にしたことがない",s:0}]},
+    { q:"決めた手順どおりに行われているか、確認していますか",
+      o:[{t:"定期的に確認し、必要なら改善している",s:3},{t:"問題があったときに確認する",s:2},
+         {t:"基本的に本人任せ",s:1},{t:"確認していない",s:0}]},
+
+    { q:"教える役割は、どう決まっていますか",
+      o:[{t:"担当も内容も決まっている",s:3},{t:"担当は決めているが、内容は本人任せ",s:2},
+         {t:"その場にいる人が教える",s:1},{t:"見て覚えてもらっている",s:0}]},
+    { q:"新人が一人で{{sagyo}}できるまでの目安や育成計画は決まっていますか",
+      o:[{t:"目安があり、計画に沿って教えている",s:3},
+         {t:"目安はあるが、教え方は担当者任せ",s:2},
+         {t:"決まっておらず、人によってばらつく",s:1},{t:"考えたことがない",s:0}]},
+    { q:"教えた後、身についたかを確認していますか",
+      o:[{t:"実技や記録で確認している",s:3},{t:"本人に聞いて確認している",s:2},
+         {t:"特に確認していない",s:1},{t:"教えっぱなしになっている",s:0}]},
+
+    { q:"誰がどの{{sagyo}}をできるか、一覧になっていますか",
+      o:[{t:"一覧があり、更新している",s:3},{t:"一覧はあるが古い",s:2},
+         {t:"頭の中にはある",s:1},{t:"把握していない",s:0}]},
+    { q:"一つの{{tani}}を担当できる人は、何人いますか",
+      o:[{t:"ほとんどの{{tani}}で複数いる",s:3},{t:"主要な{{tani}}では複数いる",s:2},
+         {t:"一部だけ複数いる",s:1},{t:"ほとんど1人ずつ",s:0}]},
+
+    { q:"ベテランの方の退職予定は、把握していますか",
+      o:[{t:"把握し、引き継ぎを進めている",s:3},{t:"把握しているが、引き継ぎはこれから",s:2},
+         {t:"なんとなく分かる程度",s:1},{t:"考えていない",s:0}]}
+  ],
+  pain:{ q:"人材育成や技術継承について、いま困っていることはありますか",
+    o:["特にない","教育に時間がかかる","人によって品質や成果が違う",
+       "特定の人が休むと仕事が止まる","退職による技術継承が心配"]},
+  bands:[
+    {max:30,  t:"特定の人への依存が高い状態です", tone:"hot",
+     do:"止まると最も困る仕事を<b>1つだけ</b>選び、手順を残すところから始めてください。",
+     ai:"撮影した作業から手順書の下書きを作れば、文書化の時間を大幅に減らせます。"},
+    {max:60,  t:"仕組みは一部ありますが、運用にばらつきがあります", tone:"warm",
+     do:"手順書の<b>更新担当と更新タイミング</b>を決めてください。",
+     ai:"変更点の反映をAIに下書きさせると、更新が続きます。"},
+    {max:85,  t:"仕組み化は進んでいます。次は育成の速さがポイントです", tone:"cool",
+     do:"スキルマップを作り、多能工化を計画してください。",
+     ai:"習熟度の記録を整理し、教育計画の作成を効率化できます。"},
+    {max:100, t:"仕組みとして定着しています", tone:"cool",
+     do:"教育の質と生産性を、さらに高めていく段階です。", ai:""}
+  ],
+  firstBy:"band"
+},
+
+/* ---------- 分野3：現場にムダが多い・段取りが悪い ---------- */
+f3:{
+  title:"{{genba}}にムダが多い・段取りが悪い",
+  lead:"同じ仕事を、より少ない時間・資源で流せる状態かを見ます。全10問・約3分。",
+  screening:{
+    q:"{{genba}}の改善は、どのように進んでいますか",
+    o:[{t:"定期的に活動し、成果も記録している"},{t:"気づいた人が個別に直している"},
+       {t:"問題が起きたときだけ対応している"},{t:"特にしていない"}]
+  },
+  blocks:[
+    {n:"時間とロスが数字で見える", qs:[0,1,2]},
+    {n:"仕事の流れが滞っていない", qs:[3,4,5,6]},
+    {n:"不良・やり直しを記録している", qs:[7]},
+    {n:"改善が続く仕組みがある", qs:[8,9]}
+  ],
+  qs:[
+    { carry:"e3a",
+      q:"{{sagyo}}ごとにどれだけ時間がかかっているか、数字で言えますか",
+      o:[{t:"{{tani}}ごとに測って数字がある",s:3},{t:"主要な{{sagyo}}だけ測っている",s:2},
+         {t:"だいたいの感覚で分かる",s:1},{t:"測ったことがない",s:0}]},
+    { q:"予定した仕事量と、実績との差を把握していますか",
+      note:"{{keikaku}}と実績の差、という意味です",
+      o:[{t:"数字で比較している",s:3},{t:"主要な{{sagyo}}だけ比較している",s:2},
+         {t:"感覚的には把握している",s:1},{t:"比較していない",s:0}]},
+    { q:"{{teishi}}と、その理由を把握していますか",
+      o:[{t:"時間と原因を記録している",s:3},{t:"大きな停止のみ記録している",s:2},
+         {t:"原因はなんとなく分かる",s:1},{t:"把握していない",s:0}]},
+
+    { q:"どこで{{sagyo}}が詰まるかは分かっていますか",
+      o:[{t:"分かっていて、対策も打った",s:3},{t:"分かっているが、対策はこれから",s:2},
+         {t:"なんとなく分かる",s:1},{t:"考えたことがない",s:0}]},
+    { q:"仕事を始める前の準備や、{{kirikae}}にかかる時間を把握していますか",
+      o:[{t:"測っていて、短縮にも取り組んでいる",s:3},{t:"一部について把握している",s:2},
+         {t:"だいたいの感覚では分かる",s:1},{t:"気にしたことがない",s:0}]},
+    { q:"{{dosen}}を見直したことはありますか",
+      o:[{t:"直近5年で見直した",s:3},{t:"見直したいが、手つかず",s:2},
+         {t:"変更のたびに継ぎ足してきた",s:1},{t:"考えたことがない",s:0}]},
+    { q:"{{tairyu}}のように、途中で止まっているものを把握していますか",
+      o:[{t:"常に数字で把握している",s:3},{t:"定期的に確認している",s:2},
+         {t:"だいたいの量は分かる",s:1},{t:"把握していない",s:0}]},
+
+    { q:"不良ややり直しは、記録していますか",
+      o:[{t:"記録して、原因分析までしている",s:3},{t:"記録はしている",s:2},
+         {t:"その場で直して終わり",s:1},{t:"記録していない",s:0}]},
+
+    { q:"{{genba}}から改善の提案が出てきますか",
+      o:[{t:"仕組みがあり、実際に採用している",s:3},{t:"提案は出るが、仕組みはない",s:2},
+         {t:"ほとんど出ない",s:1},{t:"求めたことがない",s:0}]},
+    { q:"やった改善が効いたか、確認していますか",
+      o:[{t:"前後の数字を比べている",s:3},{t:"やった感覚では分かる",s:2},
+         {t:"確認していない",s:1},{t:"改善に取り組んでいない",s:0}]}
+  ],
+  pain:{ q:"いま{{genba}}で最も大きなロスになっているものは何ですか",
+    o:["待ち時間","段取り・切り替え","探し物・移動","設備の停止",
+       "不良・やり直し","在庫・仕掛","人手不足","分からない"]},
+  bands:[
+    {max:30,  t:"改善活動は行われていますが、効果を数字で捉えにくい状態です", tone:"hot",
+     do:"気になる1つの{{tani}}について、{{sagyo}}時間を<b>10回だけ</b>測ってみてください。",
+     ai:"作業動画からサイクルタイムや停止時間を抽出すれば、計測を省力化できます。"},
+    {max:60,  t:"個別の改善は進んでいますが、続く仕組みが弱い状態です", tone:"warm",
+     do:"<b>月1回30分</b>、改善を話す場を作ってください。",
+     ai:"記録の集計を自動化すると、活動が続きやすくなります。"},
+    {max:85,  t:"活動は定着しています。効果の検証が次の課題です", tone:"cool",
+     do:"改善の前後で数字を比べる習慣をつけてください。",
+     ai:"継続して計測すれば、効果の推移を自動で追えます。"},
+    {max:100, t:"改善が回っています", tone:"cool",
+     do:"{{tani}}間の連携・全体最適を考える段階です。", ai:""}
+  ],
+  firstBy:"band"
+}
+};
+
+/* 分野1・設問5：商売の型による差し替え */
+var KATA_Q5 = {
+  torihiki:{ q:"取引先ごとに、どのくらい利益が出ているか把握していますか",
+    o:[{t:"取引先ごとに数字で把握している",s:3},{t:"主要な取引先について把握している",s:2},
+       {t:"なんとなく採算の良し悪しは分かる",s:1},{t:"売上額しか把握していない",s:0}]},
+  anken:{ q:"見積もりと、実際にかかった原価を後から比較していますか",
+    o:[{t:"案件ごとに比較している",s:3},{t:"大きな案件だけ比較している",s:2},
+       {t:"なんとなく分かる",s:1},{t:"比較していない",s:0}]},
+  shohin:{ q:"商品や販売チャネルごとに、どのくらい利益が出ているか把握していますか",
+    o:[{t:"商品・チャネルごとに把握している",s:3},{t:"主力商品・主要チャネルについて把握している",s:2},
+       {t:"なんとなく分かる",s:1},{t:"売上額しか把握していない",s:0}]},
+  tenpo:{ q:"店舗やサービスメニューごとに、どのくらい利益が出ているか把握していますか",
+    o:[{t:"店舗・メニューごとに把握している",s:3},{t:"主力メニュー・主要店舗について把握している",s:2},
+       {t:"なんとなく分かる",s:1},{t:"売上額しか把握していない",s:0}]}
+};
+
+/* 詳細診断のあと、採点外で聞く2問 */
+var IMPACT_Q = {
+  q:"その問題によって、月にどの程度の時間や費用が失われていると思いますか",
+  o:["ほとんどない","少しある","かなりある","大きな経営課題になっている","分からない"]
+};
+var LAST_Q = {
+  q:"いま特に改善したいものを1つ選んでください",
+  o:["人材育成・技術継承","生産性・作業効率","品質","売上・営業",
+     "原価・利益","デジタル化・AI","特に決めていない"]
+};
+
+/* ============================================================
+   3-2. 点数帯ごとの「できていること／ここから先」
+   bands と同じ並び。done が空なら課題だけ、next が空なら達成だけ表示する
+   ============================================================ */
+var VERDICT = {
+  f1:[
+    {done:"", next:"まず会社全体の利益を、毎月数字で見ること"},
+    {done:"商品ごとの原価を出すところまで", next:"その数字を値決めと判断に使うこと"},
+    {done:"利益を分析するところまで",       next:"値決めと予実管理に活かすこと"},
+    {done:"数字を経営判断に使うところまで", next:""}
+  ],
+  f2:[
+    {done:"", next:"止まると最も困る仕事から、手順を残すこと"},
+    {done:"手順を作るところまで",       next:"更新され、使われ続ける形にすること"},
+    {done:"仕組みを作るところまで",     next:"育成の速さを上げ、多能工化を進めること"},
+    {done:"仕組みを定着させるところまで", next:""}
+  ],
+  f3:[
+    {done:"改善に取り組むところまで",   next:"効果を数字で捉えること"},
+    {done:"個別の改善を進めるところまで", next:"改善が続く仕組みを作ること"},
+    {done:"活動を定着させるところまで", next:"効果を検証すること"},
+    {done:"改善を回すところまで",       next:""}
+  ]
+};
+
+/* ============================================================
+   4. 状態
+   ============================================================ */
+var S = { gyoshu:null, kata:[], kadai:[], entry:{}, d:{} };
+
+function gy(){ for(var i=0;i<GYOSHU.length;i++) if(GYOSHU[i].id===S.gyoshu) return GYOSHU[i]; return null; }
+function grp(){ var g=gy(); return g? g.g : "seizo"; }
+function isShokuhin(){ var g=gy(); return !!(g && g.shokuhin); }
+function isSeizo(){ return grp()==="seizo"; }
+function terms(){ return isShokuhin()? TERMS.shokuhin : (TERMS[grp()] || TERMS.seizo); }
+function t(str){
+  if(!str) return "";
+  var m = terms();
+  return String(str).replace(/\{\{(\w+)\}\}/g, function(all,k){ return m[k]!=null ? m[k] : all; });
+}
+function entryList(){ return ENTRY.filter(function(q){ return !q.seizoOnly || isSeizo(); }); }
+function entryScore(field){
+  var sum=0;
+  entryList().forEach(function(q){
+    if(q.field!==field || q.noscore) return;
+    var i=S.entry[q.id];
+    if(i!=null && q.o[i].s!=null) sum += q.o[i].s;
+  });
+  return sum;
+}
+function kataType(){
+  for(var i=0;i<KATA_PRIORITY.length;i++)
+    if(S.kata.indexOf(KATA_PRIORITY[i])>=0) return KATA_TO_TYPE[KATA_PRIORITY[i]];
+  return "torihiki";
+}
+/* 業種と商売の型を1行で表す（結果画面に出す） */
+function profile(){
+  var g = gy(), out = g ? g.label : "";
+  for(var i=0;i<KATA_PRIORITY.length;i++){
+    if(S.kata.indexOf(KATA_PRIORITY[i])<0) continue;
+    for(var j=0;j<KATA.length;j++) if(KATA[j].id===KATA_PRIORITY[i]) return out + "／" + KATA[j].label;
+  }
+  return out;
+}
+
+/* ============================================================
+   5. 画面遷移（スマホの戻る操作に対応）
+   ============================================================ */
+var nav = [{v:"top"}];
+function go(view){ nav.push(view); history.pushState({n:nav.length},""); render(); scrollTo(0,0); }
+function now(){ return nav[nav.length-1]; }
+addEventListener("popstate", function(e){
+  var n = (e.state && e.state.n) ? e.state.n : 1;
+  if(n < nav.length) nav.length = n;
+  render(); scrollTo(0,0);
+});
+history.replaceState({n:1},"");
+
+var $sc = document.getElementById("screen");
+var $hd = document.getElementById("hd");
+document.getElementById("back").addEventListener("click", function(){ history.back(); });
+addEventListener("scroll", function(){ $hd.classList.toggle("stuck", scrollY > 4); }, {passive:true});
+
+function bar(label, cur, total){
+  if(label===null){ $hd.hidden = true; return; }
+  $hd.hidden = false;
+  document.getElementById("hdttl").textContent = label;
+  document.getElementById("hdct").textContent = total ? (cur + " / " + total) : "";
+  document.getElementById("pg").style.width = total ? (cur/total*100)+"%" : "0%";
+  document.getElementById("back").style.visibility = (nav.length>1) ? "visible" : "hidden";
+}
+function paint(html){ $sc.innerHTML = '<div class="fade">'+html+'</div>'; }
+function tone(sc){ return sc<=2 ? "hot" : (sc<=4 ? "warm" : "cool"); }
+function setTone(x){ document.body.setAttribute("data-tone", x || "warm"); }
+
+function optsHTML(list, sel, multi){
+  return '<div class="opts">' + list.map(function(o,i){
+    var label = t(typeof o==="string" ? o : o.t);
+    var on = multi ? (sel.indexOf(i)>=0) : (sel===i);
+    return '<button class="opt'+(multi?" sq":"")+(on?" on":"")+'" type="button" data-i="'+i+'">'+
+           '<span class="mk"></span><span class="lb">'+label+'</span></button>';
+  }).join("") + '</div>';
+}
+function onOpt(fn){
+  $sc.querySelectorAll(".opt").forEach(function(b){
+    b.addEventListener("click", function(){ fn(parseInt(b.dataset.i,10)); });
+  });
+}
+function bind(id, fn){ var e=document.getElementById(id); if(e) e.addEventListener("click", fn); }
+/* 画面の登録先。以降で V.xxx に代入するため、先に宣言しておく */
+var V = {};
+
+function cta(label, from){
+  if(!FORM_ENDPOINT) return '<div class="pending">相談の受け口は現在準備中です。この画面をそのままお見せいただければ、内容にあわせてお答えします。</div>';
+  return '<button class="btn" type="button" data-contact="'+(from||"")+'">'+label+'</button>';
+}
+function wireCta(){
+  $sc.querySelectorAll("[data-contact]").forEach(function(b){
+    if(b.dataset.w) return; b.dataset.w="1";
+    b.addEventListener("click", function(){ go({v:"contact", from:b.dataset.contact}); });
+  });
+}
+
+/* ============================================================
+   6-2. 送信内容の組み立て
+   相談フォームを送ったときだけ、ここで作った内容が一緒に届く
+   ============================================================ */
+function labelOf(list, id){
+  for(var i=0;i<list.length;i++) if(list[i].id===id) return list[i].label;
+  return id;
+}
+function buildSummary(){
+  var L=[];
+  L.push("【業種】" + (gy() ? gy().label : "未選択"));
+  L.push("【商売の型】" + (S.kata.length ? S.kata.map(function(id){ return labelOf(KATA,id); }).join("、") : "未選択"));
+  L.push("【気になっている課題】" + (S.kadai.length ? S.kadai.map(function(id){ return labelOf(KADAI,id); }).join("、") : "未選択"));
+
+  /* 入口診断 */
+  if(Object.keys(S.entry).length){
+    L.push("");
+    L.push("■ 入口診断（各6点満点。低いほど課題)");
+    var tg=["f1","f2","f3","f5"];
+    if(isSeizo()) tg.push("quality");
+    tg.forEach(function(f){ L.push("・" + t(FIELDS[f].name) + "：" + entryScore(f)); });
+    var e4a=S.entry["e4a"];
+    if(e4a!=null){
+      var q4=ENTRY.filter(function(q){return q.id==="e4a";})[0];
+      L.push("・設備投資の予定：" + q4.o[e4a].t);
+    }
+  }
+
+  /* 詳細診断（実施したものだけ） */
+  var done = Object.keys(S.d).filter(function(f){ return DETAIL[f] && S.d[f].a.length; });
+  done.forEach(function(f){
+    var D=DETAIL[f], d=S.d[f], sc=calcScore(f), low=lowestBlock(f);
+    L.push("");
+    L.push("■ 詳細診断：" + t(D.title) + "　" + sc + "点");
+    D.blocks.forEach(function(b,i){
+      L.push("・" + t(b.n) + "：" + blockScore(f,b) + (i===low ? "　←最優先" : ""));
+    });
+    if(d.scr!=null && D.screening.o[d.scr]) L.push("・ご本人の認識：" + t(D.screening.o[d.scr].t));
+    if(d.pain!=null)   L.push("・困っていること：" + t(D.pain.o[d.pain]));
+    if(d.impact!=null) L.push("・失われている時間や費用：" + IMPACT_Q.o[d.impact]);
+  });
+  if(!done.length){ L.push(""); L.push("■ 詳細診断：未実施"); }
+  return L.join("\n");
+}
+function subjectLine(){
+  var s = "【"+FORM_SOURCE+"】" + (gy() ? gy().label : "業種未選択");
+  var done = Object.keys(S.d).filter(function(f){ return DETAIL[f] && S.d[f].a.length; });
+  if(done.length){
+    var f=done[done.length-1];
+    s += "／" + t(DETAIL[f].title) + " " + calcScore(f) + "点";
+  }
+  return s;
+}
+
+/* ============================================================
+   6-3. 相談フォーム
+   ============================================================ */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+V.contact = function(v){
+  bar("　",0,0);
+  var sum = buildSummary();
+  paint(
+    '<p class="k">ご相談</p>'+
+    '<h1>診断結果をもとに、ご相談を承ります</h1>'+
+    '<p class="intro">いただいた内容を確認し、折り返しご連絡します。'+
+    '平日の日中は別の業務に就いているため、返信は夜間または翌営業日以降になります。</p>'+
+
+    '<div class="formnote">送信すると、下記の入力内容とあわせて<b>この診断の回答と点数</b>が届きます。'+
+    'お電話でのやり取りは平日日中に対応できないため、まずはメールでご連絡します。</div>'+
+
+    '<details class="peek"><summary>一緒に送られる診断内容を確認する</summary>'+
+    '<p class="peek-body">'+esc(sum)+'</p></details>'+
+
+    '<div class="field" id="f-co"><label for="i-co">会社名・屋号<span class="req">必須</span></label>'+
+      '<input id="i-co" type="text" autocomplete="organization" placeholder="株式会社○○"><p class="msg">会社名をご入力ください</p></div>'+
+
+    '<div class="field" id="f-nm"><label for="i-nm">お名前<span class="req">必須</span></label>'+
+      '<input id="i-nm" type="text" autocomplete="name" placeholder="山田 太郎"><p class="msg">お名前をご入力ください</p></div>'+
+
+    '<div class="field" id="f-em"><label for="i-em">メールアドレス<span class="req">必須</span></label>'+
+      '<input id="i-em" type="email" autocomplete="email" inputmode="email" placeholder="info@example.co.jp"><p class="msg">メールアドレスをご確認ください</p></div>'+
+
+    '<div class="field" id="f-tl"><label for="i-tl">お電話番号<span class="opt-mark">任意</span></label>'+
+      '<input id="i-tl" type="tel" autocomplete="tel" inputmode="tel" placeholder="086-000-0000"></div>'+
+
+    '<div class="field" id="f-ms"><label for="i-ms">ご相談内容<span class="opt-mark">任意</span></label>'+
+      '<textarea id="i-ms" placeholder="お困りのことや、聞いてみたいことをご自由にお書きください。"></textarea></div>'+
+
+    '<div class="sendbox" id="sendbox">'+
+      '<button class="btn" id="send" type="button">この内容で送信する</button>'+
+      '<p class="err-all" id="errall"></p>'+
+      '<button class="btn ghost" id="cancel" type="button">戻る</button>'+
+    '</div>'+
+    '<p class="foot">お預かりした個人情報は、ご相談への対応以外には使用しません。</p>'
+  );
+
+  bind("cancel", function(){ history.back(); });
+  bind("send", function(){ submit(v.from, sum); });
+};
+
+function val(id){ var e=document.getElementById(id); return e ? e.value.trim() : ""; }
+function mark(fid, bad){
+  var e=document.getElementById(fid); if(e) e.classList.toggle("err", !!bad);
+}
+function submit(from, sum){
+  var co=val("i-co"), nm=val("i-nm"), em=val("i-em"), tl=val("i-tl"), ms=val("i-ms");
+  var okMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  mark("f-co", !co); mark("f-nm", !nm); mark("f-em", !okMail);
+  if(!co || !nm || !okMail){
+    var first = document.querySelector(".field.err input");
+    if(first) first.focus();
+    return;
+  }
+  var btn=document.getElementById("send"), box=document.getElementById("sendbox");
+  btn.disabled = true; btn.textContent = "送信しています…";
+  box.classList.remove("failed");
+
+  fetch(FORM_ENDPOINT, {
+    method:"POST",
+    headers:{"Accept":"application/json","Content-Type":"application/json"},
+    body: JSON.stringify({
+      _subject: subjectLine(),
+      "送信元": FORM_SOURCE + (from ? "（" + from + "）" : ""),
+      "会社名": co,
+      "お名前": nm,
+      email: em,
+      "お電話番号": tl || "（未記入）",
+      "ご相談内容": ms || "（未記入）",
+      "診断内容": sum
+    })
+  }).then(function(r){
+    if(!r.ok) throw new Error("status " + r.status);
+    go({v:"sent"});
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = "この内容で送信する";
+    box.classList.add("failed");
+    document.getElementById("errall").textContent =
+      "送信できませんでした。通信の状態をご確認のうえ、もう一度お試しください。繰り返し失敗する場合は、この画面をお見せいただければ直接承ります。";
+  });
+}
+
+V.sent = function(){
+  bar(null);
+  paint(
+    '<p class="k">送信しました</p>'+
+    '<h1>ありがとうございます</h1>'+
+    '<p class="tagline">ご相談を受け付けました。</p>'+
+    '<p class="intro">いただいた内容と診断結果を確認し、折り返しご連絡します。'+
+    '平日の日中は別の業務に就いているため、返信は夜間または翌営業日以降になります。'+
+    'しばらくお待ちください。</p>'+
+    '<div class="btnrow"><button class="btn ghost" id="home" type="button">最初の画面に戻る</button></div>'+
+    '<p class="foot">中小企業診断士 Essor Consulting</p>'
+  );
+  bind("home", function(){ location.href = location.pathname + location.search; });
+};
+
+/* ============================================================
+   6. 各画面
+   ============================================================ */
+function render(){ var v=now(); if(V[v.v]) V[v.v](v); }
+
+V.top = function(){
+  bar(null); setTone("warm");
+  paint(
+    '<p class="k">中小企業診断士による</p>'+
+    '<h1>経営力診断</h1>'+
+    '<p class="tagline">まず3分で、会社全体をチェックします。</p>'+
+    '<p class="intro">原価・人材・業務改善・設備投資・AI活用などから、いま取り組むと効果がありそうな領域を確認します。'+
+    '気になる分野は、さらに約3分で詳しく診断できます。</p>'+
+    '<div class="card"><h3>この診断について</h3>'+
+    '<ul class="ul">'+
+      '<li>全部で13〜15問です</li>'+
+      '<li>回答はこの端末の中だけで処理されます。ご相談フォームを送信されない限り、内容がこちらに届くことはありません</li>'+
+      '<li>途中で戻って選び直せます</li>'+
+    '</ul></div>'+
+    '<div class="btnrow"><button class="btn" id="start" type="button">診断をはじめる</button></div>'+
+    '<p class="foot">中小企業診断士 Essor Consulting</p>'
+  );
+  bind("start", function(){ go({v: S.gyoshu ? "q2" : "q1"}); });
+};
+
+V.q1 = function(){
+  bar("基本のご確認", 1, 3 + entryList().length);
+  paint('<p class="q">御社の主な業種を教えてください</p>'+
+        optsHTML(GYOSHU.map(function(g){return g.label;}),
+                 GYOSHU.map(function(g){return g.id;}).indexOf(S.gyoshu)));
+  onOpt(function(i){ S.gyoshu = GYOSHU[i].id; setTimeout(function(){ go({v:"q2"}); },150); });
+};
+
+V.q2 = function(){
+  bar("基本のご確認", 2, 3 + entryList().length);
+  var ids = KATA.map(function(k){return k.id;});
+  paint('<p class="q">御社の主な売り方・仕事の受け方に近いものを教えてください</p>'+
+        '<p class="qn">あてはまるものをすべて選んでください</p>'+
+        optsHTML(KATA.map(function(k){return k.label;}), S.kata.map(function(id){return ids.indexOf(id);}), true)+
+        '<div class="btnrow"><button class="btn" id="next" type="button"'+(S.kata.length?"":" disabled")+'>次へ</button></div>');
+  onOpt(function(i){
+    var id=KATA[i].id, p=S.kata.indexOf(id);
+    if(p>=0) S.kata.splice(p,1); else S.kata.push(id);
+    render();
+  });
+  bind("next", function(){ if(S.kata.length) go({v:"q3"}); });
+};
+
+V.q3 = function(){
+  bar("基本のご確認", 3, 3 + entryList().length);
+  var ids = KADAI.map(function(k){return k.id;});
+  paint('<p class="q">いま特に気になっている経営課題を教えてください</p>'+
+        '<p class="qn">最大2つまで選べます</p>'+
+        optsHTML(KADAI.map(function(k){return k.label;}), S.kadai.map(function(id){return ids.indexOf(id);}), true)+
+        '<div class="btnrow"><button class="btn" id="next" type="button">次へ</button>'+
+        '<button class="btn ghost" id="skip" type="button">特にない・答えずに進む</button></div>');
+  onOpt(function(i){
+    var k=KADAI[i], p=S.kadai.indexOf(k.id);
+    if(p>=0){ S.kadai.splice(p,1); }
+    else if(k.solo){ S.kadai=[k.id]; }
+    else{
+      S.kadai = S.kadai.filter(function(id){ return !KADAI[ids.indexOf(id)].solo; });
+      if(S.kadai.length>=2) S.kadai.shift();
+      S.kadai.push(k.id);
+    }
+    render();
+  });
+  bind("next", function(){ go({v:"entry", i:0}); });
+  bind("skip", function(){ S.kadai=[]; go({v:"entry", i:0}); });
+};
+
+V.entry = function(v){
+  var list=entryList(), q=list[v.i];
+  bar("入口診断", 3+v.i+1, 3+list.length);
+  paint('<p class="q">'+t(q.q)+'</p>'+ optsHTML(q.o, S.entry[q.id]==null?-1:S.entry[q.id]));
+  onOpt(function(i){
+    S.entry[q.id]=i;
+    setTimeout(function(){
+      if(v.i+1 < list.length) go({v:"entry", i:v.i+1}); else go({v:"result"});
+    },150);
+  });
+};
+
+/* ---------- ランキング ---------- */
+function fieldName(f){ return t(FIELDS[f].name); }
+function judgeText(sc){ return sc<=2 ? "詳しく確認したい領域です" : (sc<=4 ? "改善余地がありそうです" : "基盤ができています"); }
+function summaryText(f, sc){
+  var s=FIELDS[f].sum; if(!s) return "";
+  return t(sc<=2 ? s.low : (sc<=4 ? s.mid : s.high));
+}
+function reasonsOf(f){
+  var out=[];
+  for(var i=0;i<KADAI.length;i++)
+    if(KADAI[i].id===f && S.kadai.indexOf(f)>=0){ out.push("「"+KADAI[i].label+"」が気になると回答されています"); break; }
+  entryList().forEach(function(q){
+    if(q.field!==f || q.noscore) return;
+    var i=S.entry[q.id]; if(i==null) return;
+    if(q.o[i].fb) out.push(t(q.o[i].fb));
+  });
+  return out;
+}
+function ranking(){
+  var tg=["f1","f2","f3","f5"];
+  if(isSeizo()) tg.push("quality");
+  return tg.map(function(f){
+    var sc=entryScore(f);
+    return {f:f, score:sc, os:(6-sc)+(S.kadai.indexOf(f)>=0?3:0)};
+  }).sort(function(a,b){ return (b.os-a.os) || (a.score-b.score); });
+}
+function rankHTML(r, no, full){
+  var tn=tone(r.score), fd=FIELDS[r.f], body;
+  if(full){
+    var rs=reasonsOf(r.f);
+    body = rs.length ? '<ul class="rs">'+rs.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul>'
+                     : '<p class="rk-t">'+summaryText(r.f,r.score)+'</p>';
+  } else {
+    body = '<p class="rk-t">'+summaryText(r.f,r.score)+'</p>';
+  }
+  var label = fd.detail ? (tn==="cool" ? "それでも詳しく見る" : "詳しく診断する　約3分") : "この分野について見る";
+  /* 1位だけ塗りボタンにして、視線がそこに向くようにする */
+  var cls   = (fd.detail && no===1) ? "btn" : "btn ghost";
+  return '<div class="rk">'+
+    '<div class="rk-h"><span class="rk-no n">'+(no<10?"0":"")+no+'</span><span class="rk-n">'+fieldName(r.f)+'</span></div>'+
+    '<p class="rk-j '+tn+'">'+judgeText(r.score)+'</p>'+
+    '<div class="rk-body">'+body+
+    '<button class="'+cls+'" type="button" data-go="'+r.f+'">'+label+'</button></div></div>';
+}
+V.result = function(){
+  var n = entryList().length;
+  bar("診断結果", 3+n, 3+n);
+  var rk=ranking(), top3=rk.slice(0,3), rest=rk.slice(3);
+  setTone(tone(top3[0].score));
+
+  var html = '<p class="k">診断結果</p><h1>まず確認したい3つの領域</h1>'+
+    '<p class="meta">'+profile()+'</p>'+
+    top3.map(function(r,i){ return rankHTML(r,i+1,i===0); }).join("");
+
+  if(rest.length){
+    html += '<div class="btnrow"><button class="btn ghost" id="more" type="button">その他の分野も見る</button></div>'+
+            '<div id="rest" hidden>'+rest.map(function(r,i){ return rankHTML(r,i+4,false); }).join("")+'</div>';
+  }
+
+  var e4a=S.entry["e4a"], e4b=S.entry["e4b"];
+  if(e4a===0 || e4a===1){
+    var plan=(e4a===0)?"具体的な計画がある":"検討している";
+    var e4q=ENTRY.filter(function(q){return q.id==="e4b";})[0];
+    var j=(e4b!=null && e4q.o[e4b].s>=3)
+      ? "投資判断の進め方は整っています。制度の活用余地だけ確認する価値があります。"
+      : "投資の効果や回収期間の検討には、改善余地がありそうです。";
+    html += '<div class="sec"><p class="k">設備投資について</p>'+
+      '<div class="card"><h3>設備投資</h3>'+
+      '<p>今後1〜3年の設備・機器・システムの導入について「'+plan+'」とご回答いただいています。'+j+'</p>'+
+      '<button class="btn ghost" type="button" data-go="f4">この分野について見る</button></div></div>';
+  }
+
+  var others = S.kadai.filter(function(id){
+    if(["none","etc","f1","f2","f3","f5","quality","f4"].indexOf(id)>=0) return false;
+    return !!FIELDS[id];
+  });
+  if(others.length){
+    html += '<div class="sec"><p class="k">気になるとお答えいただいた分野</p>'+
+      others.map(function(id){
+        return '<div class="card"><h3>'+FIELDS[id].name+'</h3>'+
+          '<button class="btn ghost" type="button" data-go="'+id+'">この分野について見る</button></div>';
+      }).join("")+'</div>';
+  }
+
+  html += '<p class="foot">この結果は、この端末の中だけで計算しています。ご相談フォームを送信された場合のみ、診断結果もあわせて届きます。</p>';
+  paint(html);
+  bind("more", function(){
+    document.getElementById("rest").hidden=false;
+    document.getElementById("more").hidden=true;
+    wire();
+  });
+  wire();
+};
+function wire(){
+  $sc.querySelectorAll("[data-go]").forEach(function(b){
+    if(b.dataset.w) return; b.dataset.w="1";
+    b.addEventListener("click", function(){
+      var f=b.dataset.go;
+      go((FIELDS[f] && FIELDS[f].detail) ? {v:"dintro", f:f} : {v:"noplan", f:f});
+    });
+  });
+}
+
+V.noplan = function(v){
+  bar("　",0,0);
+  var fd=FIELDS[v.f], html='<p class="k">診断メニュー</p><h1>'+t(fd.name)+'</h1>';
+  if(fd.plan==="Z"){
+    html += '<div class="note">資金繰りや財務の状態は、決算書の数字から見るほうが早く正確に分かります。'+
+      '別に用意している<b>財務診断ツール</b>をお使いください。</div>'+
+      '<a class="btn" href="'+ZAIMU_URL+'" target="_blank" rel="noopener">財務診断ツールを開く</a>'+
+      '<div style="height:12px"></div>'+cta("この内容で相談する", "資金繰り");
+  } else if(fd.plan==="A"){
+    html += '<div class="note"><b>詳細診断は準備中です。</b><br>この分野の詳しい診断は現在準備しています。お急ぎでしたら、個別にご相談を承ります。</div>'+
+      cta("この分野について相談する", t(fd.name));
+  } else {
+    html += '<div class="note"><b>この分野の診断はご用意していません。</b><br>ご相談は承ります。内容によっては、その分野に詳しい専門家と連携して対応します。</div>'+
+      cta("この分野について相談する", t(fd.name));
+  }
+  html += '<div class="btnrow"><button class="btn ghost" id="b" type="button">診断結果に戻る</button></div>';
+  paint(html);
+  wireCta();
+  bind("b", function(){ history.back(); });
+};
+
+/* ============================================================
+   7. 詳細診断
+   ============================================================ */
+function initDetail(f){
+  if(S.d[f]) return;
+  var D=DETAIL[f], d={scr:null, a:[], pain:null, impact:null, carried:[]};
+  if(D.screening.carry && S.entry[D.screening.carry]!=null){
+    d.scr = S.entry[D.screening.carry]; d.carried.push("scr");
+  }
+  D.qs.forEach(function(q,i){
+    if(q.carry && S.entry[q.carry]!=null){
+      var eq=ENTRY.filter(function(x){return x.id===q.carry;})[0];
+      d.a[i]=eq.o[S.entry[q.carry]].s; d.carried.push(i);
+    }
+  });
+  S.d[f]=d;
+}
+function askList(f){
+  var out=[];
+  DETAIL[f].qs.forEach(function(q,i){ if(S.d[f].carried.indexOf(i)<0) out.push(i); });
+  return out;
+}
+function resolveQ(f,i){ var q=DETAIL[f].qs[i]; return (q.type==="kata") ? KATA_Q5[kataType()] : q; }
+function textOf(q){ return (q.qBy && q.qBy[grp()]) ? t(q.qBy[grp()]) : t(q.q); }
+function optsOf(q){
+  if(q.oByShokuhin && isShokuhin()) return q.oByShokuhin;
+  if(q.oBy && q.oBy[grp()]) return q.oBy[grp()];
+  return q.o;
+}
+/* 設問 ＋ 困りごと ＋ 影響の大きさ（＋ 引き継いでいなければ最初の1問） */
+function dTotal(f){
+  var n = askList(f).length + 2;
+  if(S.d[f].carried.indexOf("scr")<0) n += 1;
+  return n;
+}
+function dOffset(f){ return (S.d[f].carried.indexOf("scr")<0) ? 1 : 0; }
+
+V.dintro = function(v){
+  initDetail(v.f);
+  var D=DETAIL[v.f], d=S.d[v.f];
+  bar("　",0,0); setTone("warm");
+  var html='<p class="k">詳細診断</p><h1>'+t(D.title)+'</h1><p class="intro">'+t(D.lead)+'</p>';
+  if(d.carried.length){
+    html += '<div class="note">入口診断でお答えいただいた内容は引き継ぎます。同じ質問は表示されませんので、残り<b>'+(dTotal(v.f)-2)+'問</b>です。</div>';
+  }
+  html += '<div class="btnrow"><button class="btn" id="go" type="button">はじめる</button></div>';
+  paint(html);
+  bind("go", function(){
+    go(d.carried.indexOf("scr")<0 ? {v:"dscr", f:v.f} : {v:"dq", f:v.f, k:0});
+  });
+};
+
+V.dscr = function(v){
+  var D=DETAIL[v.f];
+  bar(t(D.title), 1, dTotal(v.f));
+  paint('<p class="q">'+t(D.screening.q)+'</p>'+ optsHTML(D.screening.o, S.d[v.f].scr==null?-1:S.d[v.f].scr));
+  onOpt(function(i){ S.d[v.f].scr=i; setTimeout(function(){ go({v:"dq", f:v.f, k:0}); },150); });
+};
+
+V.dq = function(v){
+  var f=v.f, D=DETAIL[f], list=askList(f), idx=list[v.k];
+  var q=resolveQ(f,idx), o=optsOf(q);
+  bar(t(D.title), dOffset(f)+v.k+1, dTotal(f));
+  var cur=-1, a=S.d[f].a[idx];
+  if(a!=null) for(var i=0;i<o.length;i++) if(o[i].s===a){ cur=i; break; }
+  paint('<p class="q">'+textOf(q)+'</p>'+ (q.note?'<p class="qn">'+t(q.note)+'</p>':'') + optsHTML(o,cur));
+  onOpt(function(i){
+    S.d[f].a[idx]=o[i].s;
+    setTimeout(function(){
+      if(v.k+1 < list.length) go({v:"dq", f:f, k:v.k+1}); else go({v:"dpain", f:f});
+    },150);
+  });
+};
+
+V.dpain = function(v){
+  var f=v.f, D=DETAIL[f];
+  bar(t(D.title), dTotal(f)-1, dTotal(f));
+  paint('<p class="q">'+t(D.pain.q)+'</p><p class="qn">採点には使いません</p>'+
+        optsHTML(D.pain.o, S.d[f].pain==null?-1:S.d[f].pain));
+  onOpt(function(i){ S.d[f].pain=i; setTimeout(function(){ go({v:"dimpact", f:f}); },150); });
+};
+
+/* 影響の大きさ。結果の後ではなく、設問の流れの中で聞く */
+V.dimpact = function(v){
+  var f=v.f, D=DETAIL[f];
+  bar(t(D.title), dTotal(f), dTotal(f));
+  paint('<p class="q">'+IMPACT_Q.q+'</p><p class="qn">採点には使いません</p>'+
+        optsHTML(IMPACT_Q.o, S.d[f].impact==null?-1:S.d[f].impact));
+  onOpt(function(i){ S.d[f].impact=i; setTimeout(function(){ go({v:"dresult", f:f}); },150); });
+};
+
+/* ---------- 採点 ---------- */
+function calcScore(f){
+  var D=DETAIL[f], a=S.d[f].a, sum=0;
+  for(var i=0;i<D.qs.length;i++) sum += (a[i]||0);
+  return Math.round(sum/(D.qs.length*3)*100);
+}
+function blockScore(f,b){
+  var a=S.d[f].a, sum=0;
+  b.qs.forEach(function(i){ sum += (a[i]||0); });
+  return Math.round(sum/(b.qs.length*3)*100);
+}
+function bandIndex(f, sc){
+  var bs=DETAIL[f].bands;
+  for(var i=0;i<bs.length;i++) if(sc<=bs[i].max) return i;
+  return bs.length-1;
+}
+function lowestBlock(f){
+  var D=DETAIL[f], best=0, bv=999;
+  D.blocks.forEach(function(b,i){ var s=blockScore(f,b); if(s<bv){ bv=s; best=i; } });
+  return best;
+}
+
+V.dresult = function(v){
+  var f=v.f, D=DETAIL[f], d=S.d[f];
+  var sc=calcScore(f), bi=bandIndex(f,sc), band=D.bands[bi], low=lowestBlock(f);
+  bar(t(D.title), dTotal(f), dTotal(f));
+  setTone(band.tone);
+
+  var html = '<p class="k">診断結果</p><h1>'+t(D.title)+'</h1><p class="meta">'+profile()+'</p>';
+
+  /* スコア＋現在の状態 */
+  var segs=[[30,"0-30"],[30,"31-60"],[25,"61-85"],[15,"86-100"]];
+  html += '<section class="score"><p class="k">総合スコア</p>'+
+    '<div class="score-main">'+
+      '<p class="score-v n"><span class="big" id="big">'+sc+'</span><span class="den">/100</span></p>'+
+      '<span class="badge '+band.tone+'">'+(sc<=30?"要確認":(sc<=60?"改善余地あり":(sc<=85?"良好":"定着")))+'</span>'+
+    '</div>'+
+    '<div class="gauge"><div class="gauge-bar" aria-hidden="true">'+
+      segs.map(function(s,i){ return '<span style="flex:'+s[0]+'"'+(i===bi?' class="on '+band.tone+'"':'')+'></span>'; }).join("")+
+    '</div>'+
+    '<span class="pin" style="left:'+sc+'%" aria-hidden="true"></span>'+
+    '<div class="gauge-sc" aria-hidden="true"><b style="left:0">0</b><b style="left:30%">30</b><b style="left:60%">60</b><b style="left:85%">85</b><b style="left:100%">100</b></div>'+
+    '</div>';
+
+  /* 仕様書の文言は句点で終わっていないものがあるので、表示時に補う */
+  html += '<div class="verdict"><p class="lede">'+t(band.t).replace(/([^。！？])$/, "$1。")+'</p>';
+
+  /* 分野1で「正直わからない」と答えた場合は、点数に関係なく最優先の一手を返す */
+  if(f==="f1" && d.scr===3){
+    html += '<p class="lede-sub">原価計算より先に、<b>月次で利益を見る仕組み</b>を作りましょう。ここが動くと、他が全部動きます。</p>';
+  } else if(d.scr!=null && d.scr<=1 && sc<60){
+    html += '<p class="lede-sub">ご認識では大きな問題はないとのことでしたが、仕組みの面ではまだ整理できる余地がありそうです。</p>';
+  } else if(f==="f1" && sc<=60){
+    html += '<p class="lede-sub">この状態だと、賃上げの原資をどこから生み出すかも見えにくくなります。</p>';
+  }
+
+  var vd = VERDICT[f] ? VERDICT[f][bi] : null;
+  if(vd && (vd.done || vd.next)){
+    var one = (!vd.done || !vd.next) ? " one" : "";
+    html += '<div class="split'+one+'">';
+    if(vd.done) html += '<div class="sp done"><p class="sp-k">'+
+      '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.4l3.2 3.2L13 4.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+      'できていること</p><p class="sp-t">'+t(vd.done)+'</p></div>';
+    if(vd.next) html += '<div class="sp next"><p class="sp-k">'+
+      '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h11M9.5 3.5L14 8l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+      'ここから先</p><p class="sp-t">'+t(vd.next)+'</p></div>';
+    html += '</div>';
+  }
+  html += '</div></section>';
+
+  /* 内訳 */
+  html += '<div class="sec"><p class="k">診断の内訳</p>'+
+    D.blocks.map(function(b,i){
+      var bs=blockScore(f,b), pri=(i===low);
+      return '<div class="it'+(pri?" pri":"")+'">'+
+        '<div class="it-h"><span class="it-n">'+t(b.n)+'</span><span class="it-v n">'+bs+'</span></div>'+
+        '<div class="it-b"><i style="--w:'+bs+'%"></i></div>'+
+        (pri?'<p class="it-tag">最優先で取り組む項目</p>':'')+'</div>';
+    }).join("")+'</div>';
+
+  /* まず取り組むこと */
+  var act = (D.firstBy==="block") ? D.first[low] : band;
+  if(act && act.do){
+    html += '<div class="sec"><p class="k">まず取り組むこと</p>'+
+      '<p class="act-lead">最も改善余地が大きい項目</p>'+
+      '<p class="act-item">'+t(D.blocks[low].n)+'</p>'+
+      '<p class="act">'+t(act.do).replace(/<b>/g,"<em>").replace(/<\/b>/g,"</em>")+'</p>';
+    if(act.ai) html += '<div class="ai"><p class="ai-k">AIを使うなら</p><p class="ai-t">'+t(act.ai)+'</p></div>';
+    html += '</div>';
+  }
+
+  html += '<div class="sec"><p class="k">ご相談</p>'+cta("この結果をもとに相談する", t(D.title))+'</div>'+
+    '<div class="btnrow"><button class="btn ghost" id="back2" type="button">診断結果の一覧に戻る</button></div>'+
+    '<p class="foot">この結果は、この端末の中だけで計算しています。ご相談フォームを送信された場合のみ、診断結果もあわせて届きます。</p>';
+
+  paint(html);
+  wireCta();
+  bind("back2", backToResult);
+  countUp(sc);
+};
+function backToResult(){
+  for(var i=nav.length-1;i>=0;i--) if(nav[i].v==="result"){ history.go(i-(nav.length-1)); return; }
+  go({v:"result"});
+}
+function countUp(goal){
+  var el=document.getElementById("big");
+  if(!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var t0=null, dur=900;
+  el.textContent="0";
+  requestAnimationFrame(function step(ts){
+    if(t0===null) t0=ts;
+    var p=Math.min((ts-t0)/dur,1);
+    el.textContent = Math.round(goal * (1-Math.pow(1-p,3)));
+    if(p<1) requestAnimationFrame(step);
+  });
+}
+
+/* ============================================================
+   8. 起動（?gyoshu=xxx で業種を事前指定できる）
+   ============================================================ */
+(function init(){
+  var g = new URLSearchParams(location.search).get("gyoshu");
+  if(g) for(var i=0;i<GYOSHU.length;i++) if(GYOSHU[i].id===g){ S.gyoshu=g; break; }
+  render();
+})();
+</script>
+</body>
+</html>
