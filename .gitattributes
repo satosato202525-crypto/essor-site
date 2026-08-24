@@ -1,0 +1,3 @@
+# 改行はLFに固定する。CNAME に CRLF が入ると独自ドメインの割り当てが外れることがある
+* text=auto eol=lf
+*.png -text
