@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>簡易財務診断ツール</title>
+<meta name="description" content="決算書の数値を入力すると、収益性・効率性・安全性の経営指標を自動計算し、業種・従業者規模別の業界平均と比較して評価します。">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="簡易 財務診断ツール">
+<meta property="og:description" content="決算書の数値を入力すると、収益性・効率性・安全性の経営指標を自動計算し、業種・従業者規模別の業界平均と比較して評価します。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --panel: #FFFFFF;
+    --ink: #1A2230;
+    --ink-soft: #55627A;
+    --ink-faint: #8A94A8;
+    --line: #E4E8EF;
+    --line-strong: #D2D9E4;
+    --accent: #0E7C74;
+    --accent-bg: #E6F2F1;
+    --field: #FFFFFF;
+    --field-line: #CBD3E0;
+    --good: #157F3C;  --good-bg: #E7F4EC;
+    --mid: #B7791F;   --mid-bg: #FBF1DF;
+    --bad: #C43A34;   --bad-bg: #FBE9E7;
+    --cat-rev: #2B4C86;   /* 収益性 */
+    --cat-eff: #8A6D00;   /* 効率性 */
+    --cat-saf: #A23B3B;   /* 安全性 */
+    --shadow: 0 1px 2px rgba(20,30,50,.05), 0 8px 24px rgba(20,30,50,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151B; --panel: #1A1E26; --ink: #EDF0F5; --ink-soft: #A6B0C2;
+      --ink-faint: #6B7686; --line: #2A303B; --line-strong: #363E4B;
+      --accent: #3DBDB1; --accent-bg: #14312E; --field: #141821; --field-line: #39424F;
+      --good: #5BD08A; --good-bg: #14291C; --mid: #E4B764; --mid-bg: #2E2413;
+      --bad: #EF8B85; --bad-bg: #2E1917;
+      --cat-rev: #7FA3DF; --cat-eff: #D8B75A; --cat-saf: #E29191;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F8FA; --panel: #FFFFFF; --ink: #1A2230; --ink-soft: #55627A;
+    --ink-faint: #8A94A8; --line: #E4E8EF; --line-strong: #D2D9E4;
+    --accent: #0E7C74; --accent-bg: #E6F2F1; --field: #FFFFFF; --field-line: #CBD3E0;
+    --good: #157F3C; --good-bg: #E7F4EC; --mid: #B7791F; --mid-bg: #FBF1DF;
+    --bad: #C43A34; --bad-bg: #FBE9E7;
+    --cat-rev: #2B4C86; --cat-eff: #8A6D00; --cat-saf: #A23B3B;
+    --shadow: 0 1px 2px rgba(20,30,50,.05), 0 8px 24px rgba(20,30,50,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151B; --panel: #1A1E26; --ink: #EDF0F5; --ink-soft: #A6B0C2;
+    --ink-faint: #6B7686; --line: #2A303B; --line-strong: #363E4B;
+    --accent: #3DBDB1; --accent-bg: #14312E; --field: #141821; --field-line: #39424F;
+    --good: #5BD08A; --good-bg: #14291C; --mid: #E4B764; --mid-bg: #2E2413;
+    --bad: #EF8B85; --bad-bg: #2E1917;
+    --cat-rev: #7FA3DF; --cat-eff: #D8B75A; --cat-saf: #E29191;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
+      "Meiryo", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 32px 20px 56px; }
+
+  header { margin-bottom: 22px; }
+  .eyebrow { font-size: 12px; letter-spacing: .14em; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; margin: 0 0 6px; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: .01em; text-wrap: balance; }
+  .lead { margin: 0; color: var(--ink-soft); font-size: 14px; max-width: 62ch; }
+
+  .card { background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; box-shadow: var(--shadow); }
+  .card-head { padding: 14px 20px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .card-head h2 { font-size: 14px; margin: 0; letter-spacing: .02em; }
+  .card-head .unit { font-size: 11px; color: var(--ink-faint); }
+
+  /* 入力 */
+  .input-card { margin-bottom: 20px; }
+  .in-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; padding: 6px 20px 18px; }
+  @media (max-width: 680px) { .in-grid { grid-template-columns: 1fr; } }
+  .in-sub { font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--ink-faint);
+    text-transform: uppercase; padding: 14px 0 4px; border-bottom: 1px solid var(--line); }
+  .field { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px;
+    padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .field label { font-size: 13.5px; color: var(--ink-soft); }
+  .field .inwrap { display: flex; align-items: baseline; gap: 5px; }
+  .field input { width: 118px; text-align: right; font: inherit; font-size: 15px;
+    font-variant-numeric: tabular-nums; color: var(--ink); background: var(--field);
+    border: 1px solid var(--field-line); border-radius: 8px; padding: 6px 10px; }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .field .suffix { font-size: 12px; color: var(--ink-faint); width: 22px; }
+  .derived { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 18px;
+    padding: 12px 0 2px; font-size: 12px; color: var(--ink-faint); }
+  .derived b { color: var(--ink-soft); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* 比較基準の選択 */
+  .cmp-card { margin-bottom: 20px; border-color: var(--line-strong); }
+  .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px; padding: 16px 20px 18px; }
+  @media (max-width: 680px) { .cmp-grid { grid-template-columns: 1fr; } }
+  .sel-wrap { display: flex; flex-direction: column; gap: 5px; }
+  .sel-wrap > span { font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    color: var(--ink-faint); text-transform: uppercase; }
+  .sel-wrap select { font: inherit; font-size: 14.5px; color: var(--ink); background: var(--field);
+    border: 1px solid var(--field-line); border-radius: 8px; padding: 8px 10px; width: 100%; }
+  .sel-wrap select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .cmp-note { grid-column: 1 / -1; margin: 0; font-size: 12px; color: var(--ink-soft);
+    background: var(--accent-bg); border-radius: 8px; padding: 9px 12px; }
+  .cmp-note b { color: var(--accent); font-weight: 700; }
+
+  /* 結果 3カテゴリ */
+  .cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: start; }
+  @media (max-width: 920px) { .cats { grid-template-columns: 1fr; } }
+  .cat-head { padding: 12px 18px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 9px; }
+  .cat-dot { width: 9px; height: 9px; border-radius: 3px; }
+  .cat-rev .cat-dot { background: var(--cat-rev); }
+  .cat-eff .cat-dot { background: var(--cat-eff); }
+  .cat-saf .cat-dot { background: var(--cat-saf); }
+  .cat-head h3 { font-size: 14px; margin: 0; letter-spacing: .02em; }
+  .cat-rev .cat-head h3 { color: var(--cat-rev); }
+  .cat-eff .cat-head h3 { color: var(--cat-eff); }
+  .cat-saf .cat-head h3 { color: var(--cat-saf); }
+
+  .metric { display: grid; grid-template-columns: 3px 1fr auto; gap: 12px; align-items: center;
+    padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .metric:last-child { border-bottom: none; }
+  .stripe { width: 3px; align-self: stretch; border-radius: 3px; min-height: 38px; }
+  .m-name { font-size: 13.5px; font-weight: 600; margin: 0 0 2px; }
+  .m-formula { font-size: 11px; color: var(--ink-faint); margin: 0; }
+  .m-base { font-size: 11px; color: var(--ink-soft); margin: 3px 0 0;
+    font-variant-numeric: tabular-nums; }
+  .m-base .sep { color: var(--ink-faint); margin: 0 5px; }
+  .m-flag { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px;
+    border-radius: 4px; background: var(--line); color: var(--ink-faint); margin-left: 5px; }
+  .m-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .m-value { font-size: 19px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .pill { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .is-good .stripe { background: var(--good); } .is-good .m-value { color: var(--good); }
+  .is-good .pill { background: var(--good-bg); color: var(--good); }
+  .is-mid .stripe { background: var(--mid); } .is-mid .m-value { color: var(--mid); }
+  .is-mid .pill { background: var(--mid-bg); color: var(--mid); }
+  .is-bad .stripe { background: var(--bad); } .is-bad .m-value { color: var(--bad); }
+  .is-bad .pill { background: var(--bad-bg); color: var(--bad); }
+  .is-none .stripe { background: var(--line-strong); } .is-none .m-value { color: var(--ink-faint); }
+  .is-none .pill { background: var(--line); color: var(--ink-faint); }
+
+  .foot { margin-top: 20px; font-size: 11.5px; color: var(--ink-faint); line-height: 1.75; }
+  .foot strong { color: var(--ink-soft); font-weight: 600; }
+  .foot p { margin: 0 0 8px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">経営支援ツール</p>
+    <h1>簡易 財務診断ツール</h1>
+    <p class="lead">決算書の数値を入力すると、収益性・効率性・安全性の代表的な経営指標を自動計算し、<strong>業種・従業者規模別の業界平均</strong>と比較して評価します。</p>
+  </header>
+
+  <section class="card cmp-card" aria-label="比較基準の選択">
+    <div class="card-head">
+      <h2>比較する業界基準</h2>
+      <span class="unit">出典：中小企業庁「令和7年中小企業実態基本調査」（令和6年度決算実績・法人企業）</span>
+    </div>
+    <div class="cmp-grid">
+      <label class="sel-wrap">
+        <span>業種</span>
+        <select id="gyoshu"></select>
+      </label>
+      <label class="sel-wrap">
+        <span>従業者規模</span>
+        <select id="kibo"></select>
+      </label>
+      <p class="cmp-note" id="cmp-note"></p>
+    </div>
+  </section>
+
+  <section class="card input-card" aria-label="入力">
+    <div class="card-head"><h2>決算数値の入力</h2><span class="unit">単位：千円</span></div>
+    <div class="in-grid">
+      <div>
+        <p class="in-sub">損益計算書（P/L）</p>
+        <div class="field"><label for="uriage">売上高</label><div class="inwrap"><input id="uriage" type="number" value="120000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="genka">売上原価</label><div class="inwrap"><input id="genka" type="number" value="80000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="hanka">販管費</label><div class="inwrap"><input id="hanka" type="number" value="34000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="keijo">経常利益</label><div class="inwrap"><input id="keijo" type="number" value="5000"><span class="suffix">千円</span></div></div>
+        <div class="derived">
+          <span>売上総利益 <b id="d-arari">—</b></span>
+          <span>営業利益 <b id="d-eigyo">—</b></span>
+        </div>
+      </div>
+      <div>
+        <p class="in-sub">貸借対照表（B/S）</p>
+        <div class="field"><label for="sisan">総資産</label><div class="inwrap"><input id="sisan" type="number" value="110000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="jiko">自己資本</label><div class="inwrap"><input id="jiko" type="number" value="18000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="ryudoS">流動資産</label><div class="inwrap"><input id="ryudoS" type="number" value="60000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="toza">当座資産</label><div class="inwrap"><input id="toza" type="number" value="45000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="tana">棚卸資産</label><div class="inwrap"><input id="tana" type="number" value="15000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="saiken">売上債権</label><div class="inwrap"><input id="saiken" type="number" value="20000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="yukei">有形固定資産</label><div class="inwrap"><input id="yukei" type="number" value="40000"><span class="suffix">千円</span></div></div>
+        <div class="field"><label for="ryudoF">流動負債</label><div class="inwrap"><input id="ryudoF" type="number" value="45000"><span class="suffix">千円</span></div></div>
+        <div class="derived"><span>負債合計（自動）<b id="d-fusai">—</b></span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cats">
+    <section class="card cat-rev">
+      <div class="cat-head"><span class="cat-dot"></span><h3>収益性</h3></div>
+      <div id="cat-rev"></div>
+    </section>
+    <section class="card cat-eff">
+      <div class="cat-head"><span class="cat-dot"></span><h3>効率性</h3></div>
+      <div id="cat-eff"></div>
+    </section>
+    <section class="card cat-saf">
+      <div class="cat-head"><span class="cat-dot"></span><h3>安全性</h3></div>
+      <div id="cat-saf"></div>
+    </section>
+  </div>
+
+  <div class="foot">
+    <p><strong>評価基準：</strong>選択した業種・従業者規模の業界平均に対し、<strong>良い側に30%超＝「良好」／±30%以内＝「普通」／悪い側に30%超＝「要改善」</strong>で判定しています。売上高販管費比率と負債比率は数値が低いほど良い指標のため、判定方向を反転しています。</p>
+    <p><strong>出典：</strong>中小企業庁「令和7年中小企業実態基本調査」（令和6年度決算実績）第2表・第3表より算出。対象は<strong>法人企業</strong>で、業界平均は業種・規模ごとの合計値から計算した加重平均です。自己資本比率・売上高経常利益率は同調査の公表値（第10-5表・第10-3表）と一致することを確認済みです。</p>
+    <p><strong>ご利用上の注意：</strong>①当座比率の業界平均は「流動資産−棚卸資産」で近似しています（有価証券が単独で取得できないため）。②売上債権回転率は受取手形・売掛金ベースです。③自己資本は純資産の額を用いています。④業界平均が0以下となる指標（小売業・宿泊業の5人以下の営業利益率）は業界比較ができないため、<span class="m-flag">固定基準</span>と表示し一般的な目安で評価します。⑤<strong>医療・福祉、教育・学習支援業、金融業・保険業、農林漁業は本調査の対象外</strong>のため、該当する場合は「全業種平均」でご確認ください。</p>
+    <p>本ツールは簡易的な参考値を提供するものです。実際の診断は決算書全体と個社の事情を踏まえてご確認ください。</p>
+  </div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const val = (id) => { const r = $(id).value.trim(); if (r === "") return null; const n = Number(r); return isFinite(n) ? n : null; };
+  const LABEL = { good: "良好", mid: "普通", bad: "要改善", none: "－" };
+
+  /* ===== 業界基準値（中小企業実態基本調査 令和7年確報より算出） ===== */
+  const BENCH_KEYS = ["arariR","eigyoR","keijoR","hankaR","yukeiK","tanaK","saikenK","fusaiR","jikoR","tozaR","ryudoR"];
+  const BENCH = {"all": {"all": [25.2,3.7,4.4,21.6,3.6,11.5,8.2,122.6,44.9,158.3,190.1],"s1": [30.9,3.0,4.1,27.9,2.3,13.3,9.5,148.0,40.3,164.5,190.1],"s2": [28.2,3.2,4.0,25.0,3.7,13.2,8.8,145.9,40.7,167.1,192.9],"s3": [24.1,3.7,4.5,20.4,4.0,10.4,8.1,112.5,47.0,168.8,206.2],"s4": [22.5,4.0,4.7,18.4,4.3,10.8,7.8,106.8,48.4,148.0,182.8]},"kensetsu": {"all": [25.1,4.8,5.7,20.2,5.0,11.6,8.0,102.5,49.4,180.8,209.7],"s1": [33.7,3.2,4.4,30.5,4.6,28.4,9.3,144.2,41.0,211.4,226.1],"s2": [28.5,4.8,5.2,23.8,5.4,19.9,10.9,108.4,48.0,202.1,221.5],"s3": [21.0,5.1,6.4,15.9,4.1,5.3,8.5,90.1,52.6,160.6,209.9],"s4": [17.9,6.0,6.7,11.9,5.9,10.3,5.7,86.4,53.6,162.8,191.7]},"seizo": {"all": [20.9,4.0,5.0,16.9,3.3,7.5,6.4,102.9,49.3,162.9,208.5],"s1": [30.0,2.2,3.0,27.8,4.0,9.8,7.5,240.1,29.4,128.0,156.3],"s2": [27.9,3.0,4.3,24.9,3.0,10.0,6.5,140.8,41.5,212.6,249.2],"s3": [22.2,3.5,4.6,18.7,2.9,6.9,6.5,111.0,47.4,170.3,219.0],"s4": [18.2,4.5,5.5,13.7,3.5,7.2,6.2,86.5,53.6,156.9,205.8]},"joho": {"all": [44.9,5.4,6.3,39.5,6.3,35.4,7.2,84.9,54.1,226.0,237.2],"s1": [59.2,3.3,4.1,55.9,6.1,42.2,6.3,175.7,36.3,220.6,228.9],"s2": [56.3,5.7,6.5,50.6,6.5,42.4,6.6,92.8,51.9,240.2,249.8],"s3": [49.4,2.5,3.1,46.9,6.5,41.3,7.8,102.9,49.3,232.7,243.4],"s4": [37.6,6.7,7.6,30.9,6.2,31.6,7.3,67.6,59.7,221.7,234.2]},"unyu": {"all": [24.1,3.0,4.1,21.1,2.5,146.7,9.4,171.3,36.9,182.9,186.2],"s1": [31.0,2.4,3.5,28.6,1.4,196.9,8.9,474.4,17.4,165.8,167.6],"s2": [39.6,2.6,3.9,37.0,2.1,121.1,11.0,271.6,26.9,190.4,194.0],"s3": [25.2,2.5,4.2,22.7,2.9,115.2,8.1,172.5,36.7,205.4,209.6],"s4": [19.3,3.3,4.1,16.1,2.8,166.0,9.6,127.1,44.0,175.3,178.4]},"oroshi": {"all": [14.4,2.3,2.7,12.2,10.5,16.2,7.3,128.8,43.7,144.2,173.1],"s1": [11.9,1.5,2.0,10.5,12.1,18.4,8.6,145.9,40.7,164.6,194.1],"s2": [14.4,1.8,2.2,12.6,10.6,15.3,7.2,149.9,40.0,148.1,177.0],"s3": [13.5,3.0,3.4,10.4,10.6,15.0,7.3,106.0,48.6,160.7,197.1],"s4": [16.1,2.5,2.9,13.6,9.8,16.4,6.8,127.0,44.1,128.6,154.1]},"kouri": {"all": [29.5,1.7,2.6,27.8,6.2,13.0,14.7,153.6,39.4,132.8,172.6],"s1": [30.5,-0.7,1.9,31.2,4.9,10.9,13.5,228.7,30.4,142.7,180.0],"s2": [28.2,1.2,1.9,27.0,5.9,17.2,14.9,153.1,39.5,159.1,198.8],"s3": [31.0,2.1,2.6,28.9,7.6,14.5,18.7,175.7,36.3,130.3,173.6],"s4": [29.2,2.7,3.2,26.6,6.6,12.0,13.9,125.9,44.3,120.9,160.7]},"fudosan": {"all": [40.5,8.6,9.0,31.9,0.7,3.3,10.7,160.6,38.4,133.1,183.4],"s1": [51.8,8.9,9.4,42.9,0.5,5.3,11.1,171.1,36.9,160.0,193.8],"s2": [39.2,7.8,8.3,31.4,0.7,2.5,7.0,181.2,35.6,120.1,172.7],"s3": [37.8,8.6,8.8,29.2,1.0,3.6,6.2,129.9,43.5,159.0,198.3],"s4": [28.6,8.6,8.9,20.0,1.4,2.5,21.4,141.3,41.4,95.2,170.4]},"gakujutsu": {"all": [54.5,11.4,13.0,43.1,4.3,35.8,7.0,49.6,66.9,214.1,221.4],"s1": [70.3,13.0,16.2,57.3,4.7,26.0,9.6,34.8,74.2,223.8,233.6],"s2": [55.0,11.0,12.1,44.0,3.9,51.0,7.2,64.2,60.9,222.6,228.0],"s3": [54.5,12.2,12.2,42.3,2.8,32.1,6.1,60.0,62.5,243.2,250.5],"s4": [40.4,10.0,11.1,30.4,6.1,44.0,6.0,77.5,56.4,180.6,186.9]},"shukuhaku": {"all": [66.0,2.9,4.2,63.1,1.9,51.3,21.9,222.4,31.0,181.0,190.7],"s1": [66.2,-1.7,1.5,67.8,1.4,32.0,34.8,206.4,32.6,125.2,133.2],"s2": [66.2,1.1,3.1,65.2,2.4,135.7,35.5,699.5,12.5,186.4,191.1],"s3": [70.8,1.7,3.2,69.0,1.7,99.4,21.8,243.2,29.1,176.9,182.1],"s4": [64.3,4.9,5.7,59.4,1.9,42.0,17.9,177.8,36.0,212.3,226.3]},"seikatsu": {"all": [34.5,2.0,2.8,32.5,2.4,73.7,28.1,218.9,31.4,133.7,138.1],"s1": [44.6,1.0,2.7,43.6,3.5,62.2,18.4,437.2,18.6,118.7,121.8],"s2": [51.6,0.5,2.6,51.1,1.6,51.2,17.4,238.8,29.5,119.6,121.7],"s3": [43.1,3.2,4.4,39.9,1.6,88.1,19.2,205.1,32.8,137.8,142.2],"s4": [27.3,2.2,2.5,25.2,2.9,80.1,41.9,183.4,35.3,157.0,164.8]},"service": {"all": [43.2,4.4,5.6,38.8,4.2,48.6,9.4,130.3,43.4,177.8,183.5],"s1": [52.3,1.2,3.0,51.1,4.2,13.5,10.0,209.7,32.3,166.8,192.3],"s2": [44.3,4.4,5.3,40.0,4.2,46.2,11.8,181.7,35.5,146.3,149.5],"s3": [52.4,4.8,6.5,47.6,3.1,65.5,9.7,75.5,57.0,270.6,278.7],"s4": [37.9,5.0,6.0,32.9,4.7,113.4,8.6,114.3,46.7,190.2,193.1]}};
+
+  const GYOSHU = [
+    ["all", "全業種平均"], ["kensetsu", "建設業"], ["seizo", "製造業"],
+    ["joho", "情報通信業"], ["unyu", "運輸業・郵便業"], ["oroshi", "卸売業"],
+    ["kouri", "小売業"], ["fudosan", "不動産業・物品賃貸業"],
+    ["gakujutsu", "学術研究・専門技術サービス業"], ["shukuhaku", "宿泊業・飲食サービス業"],
+    ["seikatsu", "生活関連サービス業・娯楽業"], ["service", "サービス業（他に分類されないもの）"],
+  ];
+  const KIBO = [
+    ["all", "全規模（計）"], ["s1", "5人以下"], ["s2", "6〜20人"],
+    ["s3", "21〜50人"], ["s4", "51人以上"],
+  ];
+
+  /* 業界平均が使えない場合に用いる一般的な固定基準 [良好, 普通] */
+  const FALLBACK = {
+    arariR: [30, 15], eigyoR: [5, 2], keijoR: [4, 1], hankaR: [20, 35],
+    yukeiK: [3, 1], tanaK: [12, 6], saikenK: [12, 6],
+    fusaiR: [100, 200], jikoR: [40, 20], tozaR: [100, 70], ryudoR: [150, 100],
+  };
+  const TOLERANCE = 0.3;   /* ±30% */
+
+  const pct = (v) => v === null ? "—" : v.toFixed(1) + "%";
+  const tim = (v) => v === null ? "—" : v.toFixed(2) + "回";
+  const yen = (v) => v === null ? "—" : v.toLocaleString() + " 千円";
+  const div = (a, b) => (a !== null && b) ? a / b : null;
+
+  /* 固定基準による判定（dir "up": 高いほど良い / "down": 低いほど良い） */
+  function absCls(v, a, b, dir) {
+    if (dir === "down") return v <= a ? "good" : v <= b ? "mid" : "bad";
+    return v >= a ? "good" : v >= b ? "mid" : "bad";
+  }
+
+  /* 業界平均との比較で判定。平均が0以下なら固定基準にフォールバック */
+  function evaluate(key, v, base, dir) {
+    if (v === null || !isFinite(v)) return { cls: "none", ratio: null, fb: false };
+    if (base === null || !isFinite(base) || base <= 0) {
+      const f = FALLBACK[key];
+      return { cls: absCls(v, f[0], f[1], dir), ratio: null, fb: true };
+    }
+    // 画面に表示する「平均比」と判定を一致させるため、小数第2位に丸めた値で判定する
+    // （丸め前の値で判定すると「0.70倍なのに要改善」といった不可解な表示になるため）
+    const r = Math.round(v / base * 100) / 100;
+    let cls;
+    if (dir === "down") cls = r <= 1 - TOLERANCE ? "good" : (r <= 1 + TOLERANCE ? "mid" : "bad");
+    else cls = r >= 1 + TOLERANCE ? "good" : (r >= 1 - TOLERANCE ? "mid" : "bad");
+    return { cls: cls, ratio: r, fb: false };
+  }
+
+  function currentBase() {
+    const g = $("gyoshu").value, k = $("kibo").value;
+    const row = (BENCH[g] || BENCH.all)[k] || BENCH.all.all;
+    const o = {};
+    BENCH_KEYS.forEach((key, i) => { o[key] = row[i]; });
+    return o;
+  }
+
+  function render(elId, rows) {
+    $(elId).innerHTML = rows.map((r) => {
+      const fmt = r.unit === "回" ? tim : pct;
+      let baseLine;
+      if (r.forced) {
+        baseLine = r.forcedNote;
+      } else {
+        const b = r.fb ? "業界平均なし" : "業界平均 " + fmt(r.base);
+        const ratio = (r.ratio !== null && isFinite(r.ratio))
+          ? '<span class="sep">/</span>平均比 ' + r.ratio.toFixed(2) + "倍" : "";
+        const flag = r.fb ? '<span class="m-flag">固定基準</span>' : "";
+        baseLine = b + ratio + flag;
+      }
+      return `
+      <div class="metric is-${r.cls}">
+        <span class="stripe" aria-hidden="true"></span>
+        <div>
+          <p class="m-name">${r.name}</p>
+          <p class="m-formula">${r.f}</p>
+          <p class="m-base">${baseLine}</p>
+        </div>
+        <div class="m-right"><span class="m-value">${r.v}</span><span class="pill">${LABEL[r.cls]}</span></div>
+      </div>`;
+    }).join("");
+  }
+
+  /* 指標1件分の表示データを組み立てる */
+  function makeRow(key, name, f, value, unit, dir, base) {
+    const e = evaluate(key, value, base, dir);
+    return {
+      name: name, f: f, unit: unit,
+      v: unit === "回" ? tim(value) : pct(value),
+      cls: e.cls, ratio: e.ratio, fb: e.fb, base: base, forced: false,
+    };
+  }
+
+  function calc() {
+    const uriage = val("uriage"), genka = val("genka"), hanka = val("hanka"), keijo = val("keijo");
+    const sisan = val("sisan"), jiko = val("jiko"), ryudoS = val("ryudoS"), toza = val("toza"),
+          tana = val("tana"), saiken = val("saiken"), yukei = val("yukei"), ryudoF = val("ryudoF");
+
+    const arari = (uriage !== null && genka !== null) ? uriage - genka : null;
+    const eigyo = (arari !== null && hanka !== null) ? arari - hanka : null;
+    const fusai = (sisan !== null && jiko !== null) ? sisan - jiko : null;
+    $("d-arari").textContent = yen(arari);
+    $("d-eigyo").textContent = yen(eigyo);
+    $("d-fusai").textContent = yen(fusai);
+
+    const B = currentBase();
+
+    // 収益性
+    const arariR = arari !== null && uriage ? arari / uriage * 100 : null;
+    const eigyoR = eigyo !== null && uriage ? eigyo / uriage * 100 : null;
+    const keijoR = keijo !== null && uriage ? keijo / uriage * 100 : null;
+    const hankaR = hanka !== null && uriage ? hanka / uriage * 100 : null;
+    render("cat-rev", [
+      makeRow("arariR", "売上高総利益率", "売上総利益 ÷ 売上高", arariR, "%", "up", B.arariR),
+      makeRow("eigyoR", "売上高営業利益率", "営業利益 ÷ 売上高", eigyoR, "%", "up", B.eigyoR),
+      makeRow("keijoR", "売上高経常利益率", "経常利益 ÷ 売上高", keijoR, "%", "up", B.keijoR),
+      makeRow("hankaR", "売上高販管費比率", "販管費 ÷ 売上高（低いほど良）", hankaR, "%", "down", B.hankaR),
+    ]);
+
+    // 効率性
+    render("cat-eff", [
+      makeRow("yukeiK", "有形固定資産回転率", "売上高 ÷ 有形固定資産", div(uriage, yukei), "回", "up", B.yukeiK),
+      makeRow("tanaK", "棚卸資産回転率", "売上高 ÷ 棚卸資産", div(uriage, tana), "回", "up", B.tanaK),
+      makeRow("saikenK", "売上債権回転率", "売上高 ÷ 売上債権", div(uriage, saiken), "回", "up", B.saikenK),
+    ]);
+
+    // 安全性
+    // 自己資本が0以下（債務超過）の場合、負債比率は比率として意味を持たないため算出不能とする
+    const chomuChoka = (jiko !== null && jiko <= 0);
+    const fusaiR = (!chomuChoka && fusai !== null && jiko) ? fusai / jiko * 100 : null;
+    const jikoR = jiko !== null && sisan ? jiko / sisan * 100 : null;
+    const tozaR = toza !== null && ryudoF ? toza / ryudoF * 100 : null;
+    const ryudoR = ryudoS !== null && ryudoF ? ryudoS / ryudoF * 100 : null;
+
+    const fusaiRow = makeRow("fusaiR", "負債比率", "負債 ÷ 自己資本（低いほど良）", fusaiR, "%", "down", B.fusaiR);
+    if (chomuChoka) {
+      fusaiRow.cls = "bad";
+      fusaiRow.v = "—";
+      fusaiRow.forced = true;
+      fusaiRow.forcedNote = "自己資本がマイナス（債務超過）のため算出できません";
+    }
+    render("cat-saf", [
+      fusaiRow,
+      makeRow("jikoR", "自己資本比率", "自己資本 ÷ 総資産", jikoR, "%", "up", B.jikoR),
+      makeRow("tozaR", "当座比率", "当座資産 ÷ 流動負債", tozaR, "%", "up", B.tozaR),
+      makeRow("ryudoR", "流動比率", "流動資産 ÷ 流動負債", ryudoR, "%", "up", B.ryudoR),
+    ]);
+
+    updateNote();
+  }
+
+  function updateNote() {
+    const g = $("gyoshu"), k = $("kibo");
+    const gName = g.options[g.selectedIndex].text;
+    const kName = k.options[k.selectedIndex].text;
+    $("cmp-note").innerHTML =
+      "比較対象：<b>" + gName + " ／ " + kName + "</b>　" +
+      "この業界平均より30%超良ければ「良好」、±30%以内なら「普通」、30%超悪ければ「要改善」と判定します。";
+    const p = new URLSearchParams();
+    if (g.value !== "all") p.set("gyoshu", g.value);
+    if (k.value !== "all") p.set("kibo", k.value);
+    const q = p.toString();
+    // file:// で開いた場合はブラウザが例外を投げるため無視する（公開URL上では正常に更新される）
+    try {
+      history.replaceState(null, "", q ? "?" + q : location.pathname);
+    } catch (e) { /* ローカルプレビュー時は何もしない */ }
+  }
+
+  /* 初期化 */
+  (function init() {
+    GYOSHU.forEach(([v, t]) => { const o = document.createElement("option"); o.value = v; o.textContent = t; $("gyoshu").appendChild(o); });
+    KIBO.forEach(([v, t]) => { const o = document.createElement("option"); o.value = v; o.textContent = t; $("kibo").appendChild(o); });
+
+    // URLパラメータで業種・規模を指定可能（業種別QRコードの配布用）
+    const q = new URLSearchParams(location.search);
+    const g = q.get("gyoshu"), k = q.get("kibo");
+    if (g && BENCH[g]) $("gyoshu").value = g;
+    if (k && BENCH.all[k]) $("kibo").value = k;
+
+    document.querySelectorAll("input").forEach((el) => el.addEventListener("input", calc));
+    $("gyoshu").addEventListener("change", calc);
+    $("kibo").addEventListener("change", calc);
+    calc();
+  })();
+</script>
+</body>
+</html>
