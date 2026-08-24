@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+# 代表者の氏名画像だけを Google 画像検索から外す。
+# サイトの他の画像はブロックしない（ロゴ、OGP、ツールのスクリーンショットは通常どおり）。
+#
+# 顔写真を載せて同じように画像検索から外したくなったときは、
+# 下の Disallow を1行足すだけでよい。例：
+#   Disallow: /assets/representative-portrait.png
+User-agent: Googlebot-Image
+Disallow: /assets/representative-nameplate.png
+
 Sitemap: https://essor-consulting.com/sitemap.xml
