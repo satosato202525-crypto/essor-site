@@ -141,7 +141,8 @@ body{
    auto-phrase は対応ブラウザだけで効き、未対応では無視される（害はない） */
 .ph{display:inline-block}
 h1,h2.sec,.creed .pull,.card h3,.card .cc,.mcatch,.menu h3,.essor p,
-.cta h2,.closing,.bhead h3,.tool h4,.about .n,.phead h2,.toc a,.story .tate{
+.cta h2,.closing,.bhead h3,.tool h4,.n,.phead h2,.toc a,.story .tate,
+.note-s,.menu > p,.mcols li,.deflist dd,.job p,.story p{
   word-break:auto-phrase;
 }
 
@@ -460,9 +461,9 @@ img.shotimg{
 
 /* ---------- 代表 ---------- */
 .about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.8fr);gap:clamp(28px,5vw,72px);align-items:start}
-.about .n{font-size:26px;letter-spacing:.06em;margin:0 0 10px}
-.about .r{font-size:13px;color:var(--ink-3);letter-spacing:.05em;margin:0;line-height:2}
-.about p.t{font-size:15.5px;color:var(--ink-2);margin:0 0 30px}
+.n{font-size:26px;letter-spacing:.06em;margin:0 0 10px}
+.r{font-size:13px;color:var(--ink-3);letter-spacing:.05em;margin:0;line-height:2}
+p.t{font-size:15.5px;color:var(--ink-2);margin:0 0 30px}
 
 /* ---------- 屋号（トップ） ---------- */
 .essor{background:var(--navy);color:var(--on-navy);overflow:hidden;text-align:center}
@@ -727,7 +728,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <button class="btn btn-s" data-go="contact"><span>相談してみる</span></button>
       </div>
     </div>
-    <div class="scrollhint"><i></i>Scroll</div>
   </section>
 
   <section class="creed">
@@ -762,17 +762,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bnum">Ⅰ</span>
           <h3>売上と利益をつくる</h3>
           <span class="bline"></span>
-          <span class="bsub">商品と価格</span>
         </div>
         <div class="grid g3">
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1M9 20h6M10 17h4a4.5 4.5 0 1 0-4 0z"/></svg>
             <h3>新商品・サービスを形にする</h3>
             <p class="cc mincho"><span class="ph">アイデアを、</span><span class="ph">「判断できる商品案」へ。</span></p>
             <p>顧客ニーズ、商品コンセプト、原価、製造条件を一つずつ整理し、売れそう・つくれそう・利益が出そうを確かめながら道筋を組み立てます。</p>
           </div>
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.2V20M8.5 20h7M4.5 9.2h15M12 6.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6M4.5 9.2l-2.3 4.9a2.6 2.6 0 0 0 4.6 0zM19.5 9.2l-2.3 4.9a2.6 2.6 0 0 0 4.6 0z"/></svg>
             <h3>原価と価格を見直す</h3>
             <p class="cc mincho"><span class="ph">「売れている」から、</span><span class="ph">「儲かっている」へ。</span></p>
             <p>商品・取引ごとの採算を整理し、どこで利益が失われているのか、いくらで売れば必要な利益が残るのかを数字で確認します。</p>
@@ -785,17 +782,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bnum">Ⅱ</span>
           <h3>現場を整える</h3>
           <span class="bline"></span>
-          <span class="bsub">データと工程</span>
         </div>
         <div class="grid g3">
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M6 21V12M11 21V7M16 21V15M21 21V4"/></svg>
             <h3>現場のデータから改善点を見つける</h3>
             <p class="cc mincho"><span class="ph">「忙しい」を、</span><span class="ph">改善できる数字に変えます。</span></p>
             <p>作業時間、生産量、不良、停止を整理し、どこで時間・人・材料が失われているのかを見えるようにします。</p>
           </div>
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11l-3-3M21 17H10l3 3M3 12h18"/></svg>
             <h3>生産の流れを整える</h3>
             <p class="cc mincho"><span class="ph">「頑張って回す現場」から、</span><span class="ph">「仕組みで回る現場」へ。</span></p>
             <p>作業の流れ、時間、人員、設備、レイアウトを確認し、今ある人・設備・スペースを活かして無理なく流れる方法を考えます。</p>
@@ -808,17 +802,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bnum">Ⅲ</span>
           <h3>仕組みに投資する</h3>
           <span class="bline"></span>
-          <span class="bsub">AIと設備</span>
         </div>
         <div class="grid g3">
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h8v8H8zM4 10V6h4M20 10V6h-4M4 14v4h4M20 14v4h-4"/></svg>
             <h3>AI・デジタルを仕事に使う</h3>
             <p class="cc mincho">「どの仕事を楽にできるか」から考えます。</p>
             <p>時間のかかる作業、繰り返している作業を見つけます。既製のサービスで足りなければ、必要な範囲で業務に合わせたツールをつくります。</p>
           </div>
           <div class="card">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10h5v11M14 21V6h5v15M7.5 14h0M7.5 17.5h0"/></svg>
             <h3>補助金を活用して投資する</h3>
             <p class="cc mincho"><span class="ph">補助金ありきではなく、</span><span class="ph">「何を実現したいか」から。</span></p>
             <p>投資の目的、費用、期待する効果、収益への影響を整理したうえで、活用できる公的支援制度があるかを検討します。</p>
@@ -916,15 +907,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   </section>
 
   <section class="sunk">
-    <div class="wrap about">
-      <div data-r>
-        <p class="blocklabel" style="margin-bottom:22px">About</p>
-        <p class="n mincho">中小企業診断士</p>
-        <p class="r">岡山県中小企業診断士協会所属</p>
-      </div>
-      <div data-r data-d="1">
-        <p class="t">食品メーカーに11年在籍し、製造・品質管理・研究開発・生産技術を経験。新商品の量産立ち上げ、原料の切り替え、設備導入、工場のレイアウト変更などに携わりました。現在は中小企業診断士として、製造業を中心にものづくりを支援しています。</p>
-        <button class="btn btn-s" data-go="about"><span>詳しいプロフィールを見る</span></button>
+    <div class="wrap split">
+      <p class="vlabel">About</p>
+      <div>
+        <p class="t" data-r>食品メーカーに11年在籍し、製造・品質管理・研究開発・生産技術を経験。新商品の量産立ち上げ、原料の切り替え、設備導入、工場のレイアウト変更などに携わりました。現在は中小企業診断士として、製造業を中心にものづくりを支援しています。</p>
+        <p class="r" data-r data-d="1">中小企業診断士　／　岡山県中小企業診断士協会所属</p>
+        <div data-r data-d="2"><button class="btn btn-s" data-go="about"><span>詳しいプロフィールを見る</span></button></div>
       </div>
     </div>
   </section>
@@ -947,7 +935,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   <section class="cta">
     <div class="wrap">
       <h2 class="mincho" data-r>まずはお気軽にご相談ください。</h2>
-      <p data-r data-d="1">初回のご相談は無料です。内容をうかがったうえで、<br>お力になれるかどうかも含めて正直にお答えします。</p>
+      <p data-r data-d="1">初回のご相談は、60分まで無料です。<br>まずは現在のお困りごとをお聞かせください。<br>お力になれるかどうかも含めて、正直にお答えします。</p>
       <div data-r data-d="2"><button class="btn btn-p" data-go="contact"><span>お問い合わせ</span></button></div>
     </div>
   </section>
@@ -1258,7 +1246,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         </ul>
       </div>
 
-      <p class="note-s">※ 官公署に提出する申請書類の作成・提出等については、法令に応じて行政書士などの専門家と連携して対応します。</p>
+      <p class="note-s"><span class="ph">※ 官公署に提出する申請書類の作成・提出等については、</span><span class="ph">法令に応じて行政書士などの専門家と連携して対応します。</span></p>
     </article>
 
     <article class="menu" id="m7" data-r>
@@ -1325,7 +1313,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 <div class="page" id="about">
   <div class="wrap phead">
     <p class="lat-s">About</p>
-    <h2 class="mincho">プロフィール</h2>
+    <h2 class="mincho">代表プロフィール</h2>
   </div>
 
   <section>
@@ -1372,11 +1360,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="wrap split">
       <p class="vlabel">Value</p>
       <div>
-        <h2 class="sec mincho" data-r>この経歴で何ができるか</h2>
+        <h2 class="sec mincho" data-r>この経歴を活かして</h2>
         <div class="story" style="margin:0;max-width:640px">
-          <p data-r data-d="1">開発と生産技術の両方を経験している診断士は、多くありません。</p>
-          <p data-r data-d="2">食品工場では一般に、開発と製造の間に断絶があります。開発は「この条件で作ってほしい」と言い、製造は「その条件では回らない」と言う。どちらも間違っていません。見ている時間の単位と、責任の範囲が違うだけです。</p>
-          <p class="hi mincho" data-r data-d="3">私は両方の席に座っていたので、双方の言い分がどちらも本当であることを知っています。その前提から、実際に回る条件を一緒に探すことができます。</p>
+          <p data-r data-d="1">食品メーカーで、研究開発と生産技術の両方を経験してきました。</p>
+          <p data-r data-d="2">開発側には、実現したい品質や仕様があります。一方、製造側には、設備、人員、工程、コストなど、実際に生産を続けるための条件があります。</p>
+          <p data-r data-d="3">どちらかだけを見て進めると、良いアイデアでも現場ではうまく回らないことがあります。</p>
+          <p class="hi mincho" data-r data-d="3">開発の意図と製造現場の条件を整理し、必要に応じてデータも確認しながら、実際に進められる方法を一緒に考えます。</p>
         </div>
       </div>
     </div>
@@ -1411,7 +1400,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <p class="lat-s" style="text-align:center" data-r>Essor</p>
         <h2 class="sec mincho" style="text-align:center;margin-bottom:clamp(40px,5vw,64px)" data-r>屋号について</h2>
 
-        <p data-r>Essor（エソール）は、フランス語で「飛翔」を意味する言葉です。prendre son essor ——鳥が翼を広げ、羽ばたいて高度を上げていくこと。</p>
+        <p data-r>Essor（エソール）は、フランス語で「飛翔」を意味する言葉です。</p>
         <p class="hi" data-r>食品工場の中には、値段に見合わないほどの技術が入っています。何度も試作を重ねてたどり着いた配合。一つずつ条件を詰めていった工程。書類にも数字にも残らないまま、担当者の手に蓄えられた判断。</p>
         <p class="hi" data-r>けれどその中身は、買う人のところまで届いていないことがほとんどです。安く見られてしまうのは、技術が足りないからではありません。伝わっていないからです。</p>
         <p class="hi mincho" data-r>つくっているものの中身を、余すところなく伝えたい。それが、この仕事を選んだ理由です。</p>
@@ -1428,8 +1417,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     <p class="lat-s">Contact</p>
     <h2 class="mincho">お問い合わせ</h2>
     <p>
-      ご相談は無料です。お力になれるかどうかも含めて、誠実に対応いたします。<br>
-      お問い合わせはメールフォームにて承っております。
+      初回のご相談は、60分まで無料です。<br>
+      まずは現在のお困りごとをお聞かせください。<br>
+      お力になれるかどうかも含めて、正直にお答えします。
     </p>
   </div>
 

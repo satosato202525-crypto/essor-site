@@ -10,7 +10,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="簡易 財務診断ツール">
 <meta property="og:description" content="決算書の数値を入力すると、収益性・効率性・安全性の経営指標を自動計算し、業種・従業者規模別の業界平均と比較して評価します。">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230A2159'/><text x='50' y='73' font-size='66' font-family='Georgia,serif' fill='%23C0A05D' text-anchor='middle'>E</text></svg>">
 <style>
   :root {
     --bg: #F7F8FA;
@@ -65,8 +65,7 @@
   * { box-sizing: border-box; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
-    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic",
-      "Meiryo", "Segoe UI", system-ui, sans-serif;
+    font-family: "Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic",Meiryo,system-ui,sans-serif;
     line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 1140px; margin: 0 auto; padding: 32px 20px 56px; }
@@ -158,8 +157,20 @@
   .foot strong { color: var(--ink-soft); font-weight: 600; }
   .foot p { margin: 0 0 8px; }
 </style>
+
+<style>
+/* サイトへ戻る導線。ツール単体で開かれても、発行元と相談先が分かるようにする */
+.ess-bar{max-width:1080px;margin:0 auto;padding:14px 20px 0;font-size:13px}
+.ess-bar a{color:#0A2159;text-decoration:none;letter-spacing:.04em;border-bottom:1px solid rgba(10,33,89,.25);padding-bottom:2px}
+.ess-bar a:hover{border-bottom-color:#0A2159}
+.ess-cta{max-width:1080px;margin:34px auto 40px;padding:26px 24px;border:1px solid #DFD9CB;background:#FCFBF8;text-align:center}
+.ess-cta p{margin:0 0 16px;font-size:14px;color:#4E5875;line-height:1.9}
+.ess-cta a{display:inline-block;background:#0A2159;color:#fff;text-decoration:none;padding:13px 30px;font-size:14px;letter-spacing:.06em}
+.ess-cta a:hover{background:#96762F}
+</style>
 </head>
 <body>
+<div class="ess-bar"><a href="https://essor-consulting.com/">← Essor Consulting</a></div>
 
 <div class="wrap">
   <header>
@@ -430,5 +441,9 @@
     calc();
   })();
 </script>
+<div class="ess-cta">
+  <p>この結果をもとに、次に何をするかをご一緒に整理します。<br>初回のご相談は、60分まで無料です。</p>
+  <a href="https://essor-consulting.com/#contact">無料で相談する</a>
+</div>
 </body>
 </html>

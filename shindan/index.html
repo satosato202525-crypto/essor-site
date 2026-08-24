@@ -10,10 +10,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="経営力診断">
 <meta property="og:description" content="スマホだけで、会社の状態を3分でチェック。いま取り組むと効果がありそうな領域が分かります。">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230A2159'/><text x='50' y='73' font-size='66' font-family='Georgia,serif' fill='%23C0A05D' text-anchor='middle'>E</text></svg>">
 <style>
 :root{
   --s1:4px;  --s2:8px;  --s3:12px; --s4:16px; --s5:20px;
@@ -66,12 +63,12 @@ body::before{
 }
 body{
   margin:0; background:transparent; color:var(--ink);
-  font-family:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic",Meiryo,system-ui,sans-serif;
   font-size:16px; line-height:1.9; font-weight:400; letter-spacing:.012em;
   line-break:strict; overflow-wrap:break-word;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
-.n{font-family:"Inter","Noto Sans JP",sans-serif; font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
+.n{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic",Meiryo,system-ui,sans-serif; font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
 :focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:2px}
 ::selection{background:var(--ink); color:var(--bg)}
 button{font-family:inherit; -webkit-tap-highlight-color:transparent}
@@ -204,7 +201,7 @@ h1{font-size:25px; font-weight:700; line-height:1.45; letter-spacing:.005em; mar
 .gauge-sc{position:relative; height:16px; margin-top:7px}
 .gauge-sc b{
   position:absolute; top:0; transform:translateX(-50%); font-size:10px; font-weight:500;
-  color:var(--line2); font-family:"Inter",sans-serif; font-variant-numeric:tabular-nums;
+  color:var(--line2); font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic",Meiryo,system-ui,sans-serif; font-variant-numeric:tabular-nums;
 }
 .gauge-sc b:first-child{transform:none}
 .gauge-sc b:last-child{transform:translateX(-100%)}
@@ -257,7 +254,7 @@ h1{font-size:25px; font-weight:700; line-height:1.45; letter-spacing:.005em; mar
 .rk{padding:var(--s5) 0; border-top:1px solid var(--line2)}
 .rk:first-of-type{border-top-width:2px; border-top-color:var(--ink)}
 .rk-h{display:flex; align-items:baseline; gap:var(--s3); margin-bottom:var(--s2)}
-.rk-no{font-size:13px; font-weight:700; color:var(--ink3); font-family:"Inter",sans-serif; letter-spacing:.02em; flex:0 0 auto}
+.rk-no{font-size:13px; font-weight:700; color:var(--ink3); font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic",Meiryo,system-ui,sans-serif; letter-spacing:.02em; flex:0 0 auto}
 .rk-n{font-size:19px; font-weight:700; line-height:1.45; flex:1 1 auto; word-break:auto-phrase}
 .rk-j{font-size:12px; font-weight:700; letter-spacing:.04em; margin:0 0 var(--s3); padding-left:calc(var(--s3) + 22px)}
 .rk-j.hot{color:var(--hot)} .rk-j.warm{color:var(--warm)} .rk-j.cool{color:var(--cool)}
@@ -314,7 +311,7 @@ details.peek .peek-body{
   padding:0 var(--s5) var(--s5); margin:0;
   font-size:12.5px; line-height:1.9; color:var(--ink2);
   white-space:pre-wrap; word-break:break-all;
-  font-family:"Inter","Noto Sans JP",monospace;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 .note{background:var(--paper); border:1px solid var(--line); border-radius:5px; padding:var(--s4) var(--s5); font-size:14.5px; line-height:1.85; color:var(--ink2); margin:0 0 var(--s4)}
 .note b{color:var(--ink); font-weight:700}
@@ -335,8 +332,20 @@ details.peek .peek-body{
   .score-v .big{font-size:80px}
 }
 </style>
+
+<style>
+/* サイトへ戻る導線。ツール単体で開かれても、発行元と相談先が分かるようにする */
+.ess-bar{max-width:1080px;margin:0 auto;padding:14px 20px 0;font-size:13px}
+.ess-bar a{color:#0A2159;text-decoration:none;letter-spacing:.04em;border-bottom:1px solid rgba(10,33,89,.25);padding-bottom:2px}
+.ess-bar a:hover{border-bottom-color:#0A2159}
+.ess-cta{max-width:1080px;margin:34px auto 40px;padding:26px 24px;border:1px solid #DFD9CB;background:#FCFBF8;text-align:center}
+.ess-cta p{margin:0 0 16px;font-size:14px;color:#4E5875;line-height:1.9}
+.ess-cta a{display:inline-block;background:#0A2159;color:#fff;text-decoration:none;padding:13px 30px;font-size:14px;letter-spacing:.06em}
+.ess-cta a:hover{background:#96762F}
+</style>
 </head>
 <body>
+<div class="ess-bar"><a href="https://essor-consulting.com/">← Essor Consulting</a></div>
 <header class="hd" id="hd" hidden>
   <div class="hd-in">
     <button class="hd-back" id="back" type="button">
@@ -1311,7 +1320,7 @@ V.result = function(){
   var rk=ranking(), top3=rk.slice(0,3), rest=rk.slice(3);
   setTone(tone(top3[0].score));
 
-  var html = '<p class="k">診断結果</p><h1>まず確認したい3つの領域</h1>'+
+  var html = '<p class="k">診断結果</p><h1>詳しく診断する領域</h1>'+
     '<p class="meta">'+profile()+'</p>'+
     top3.map(function(r,i){ return rankHTML(r,i+1,i===0); }).join("");
 
