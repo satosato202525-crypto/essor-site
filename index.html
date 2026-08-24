@@ -432,6 +432,13 @@ h1 .em{background:var(--hl);padding:0 .06em;margin:0 -.06em}
   padding:6px 13px;border:1px solid var(--hair);color:var(--ink-3);
 }
 .tag.live{border-color:var(--gold-2);color:var(--gold)}
+/* スクリーンショットを入れたカード。枠の比率は据え置き、上端を優先して見せる */
+/* 画像は書き出し時に16:10へ切り出し済みなので、比率はCSSで指定しない。
+   flex内では width:100% と aspect-ratio が噛み合わず、本来の高さで描画されるため */
+img.shotimg{
+  display:block;width:100%;height:auto;
+  border:1px solid var(--hair);background:var(--sunk);
+}
 .shot{
   border:1px solid var(--hair);background:var(--sunk);aspect-ratio:16/10;
   display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;
@@ -865,41 +872,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
 
     <div class="wrap">
-      <div data-r>
-        
-        <div class="hr"></div>
-      </div>
-      <div class="grid g2" style="margin-bottom:clamp(56px,7vw,88px)" data-r data-d="1">
+      <div data-r><div class="hr"></div></div>
+
+      <div class="grid g2" style="margin-top:32px" data-r data-d="1">
         <div class="tool">
+          <img class="shotimg" src="assets/shot-shindan.jpg" alt="経営力診断ツールの結果画面" width="1000" height="625" loading="lazy">
           <span class="tag live">公開中</span>
-          <h4>簡易財務診断</h4>
+          <h4>経営力診断ツール</h4>
+          <p>スマートフォンだけで、10分ほど。決算書がなくても、いまの経営の状態をひと通り確認できます。</p>
+          <a class="btn btn-s" href="https://essor-consulting.com/shindan/" target="_blank" rel="noopener"><span>ツールを開く</span></a>
+        </div>
+        <div class="tool">
+          <img class="shotimg" src="assets/shot-zaimu.png" alt="簡易財務診断ツールの指標画面" width="1000" height="625" loading="lazy">
+          <span class="tag live">公開中</span>
+          <h4>簡易財務診断ツール</h4>
           <p>決算書の数字を入力すると、収益性・安全性・効率性を業界平均と比較します。業種11分類・従業者規模5区分の平均値は、中小企業庁の実態基本調査をもとにしています。</p>
           <a class="btn btn-s" href="https://essor-consulting.com/zaimu/" target="_blank" rel="noopener"><span>ツールを開く</span></a>
         </div>
         <div class="tool">
-          <span class="tag live">公開中</span>
-          <h4>経営力診断</h4>
-          <p>スマートフォンだけで、10分ほど。決算書がなくても、いまの経営の状態をひと通り確認できます。</p>
-          <a class="btn btn-s" href="https://essor-consulting.com/shindan/" target="_blank" rel="noopener"><span>ツールを開く</span></a>
+          <img class="shotimg" src="assets/shot-cycle.png" alt="サイクルタイム分析ツールの画面" width="1000" height="625" loading="lazy">
+          <span class="tag">現場用</span>
+          <h4>サイクルタイム分析ツール</h4>
+          <p>工場の作業動画から、サイクルタイムと機械の稼働率を集計します。ストップウォッチと紙では人手が足りず、標準時間を出したいのに測れない。そうした場面のために作りました。</p>
         </div>
       </div>
 
-      <div data-r>
-        <p class="blocklabel">Field<b>現場のためにつくったもの</b></p>
-        <div class="hr"></div>
-      </div>
-      <div class="grid g2" style="margin-top:32px" data-r data-d="1">
-        <div class="tool">
-          <div class="shot">スクリーンショット<br>作業時間を測るアプリ</div>
-          <h4>作業時間を測るアプリ</h4>
-          <p>ストップウォッチと紙で作業時間を測ろうとすると、人手が足りません。標準時間を出したいのに測れない、という場面のために作りました。</p>
-        </div>
-        <div class="tool">
-          <div class="shot">スクリーンショット<br>動画分析ツール</div>
-          <h4>動画から作業を分析するツール</h4>
-          <p>撮影した作業を後から見返し、どこに時間がかかっているかを整理します。</p>
-        </div>
-      </div>
       <p class="closing mincho" data-r>
         <span class="ph">生成AIを活用し、</span><span class="ph">それぞれの企業にあったツールでサポートします。</span>
       </p>
@@ -1501,8 +1498,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <h4>Tools &amp; Note</h4>
         <ul>
           <li><a href="https://note.com/essor_c" target="_blank" rel="noopener">note</a></li>
-          <li><a href="https://essor-consulting.com/zaimu/" target="_blank" rel="noopener">簡易財務診断</a></li>
-          <li><a href="https://essor-consulting.com/shindan/" target="_blank" rel="noopener">経営力診断</a></li>
+          <li><a href="https://essor-consulting.com/zaimu/" target="_blank" rel="noopener">簡易財務診断ツール</a></li>
+          <li><a href="https://essor-consulting.com/shindan/" target="_blank" rel="noopener">経営力診断ツール</a></li>
         </ul>
       </div>
     </div>
