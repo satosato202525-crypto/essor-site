@@ -402,14 +402,20 @@ html.js .hero.ready .sub,html.js .hero.ready .actions,html.js .hero.ready .actno
 .card:hover::after,.tool:hover::after{
   background-size:100% 1px, 1px 100%, 100% 1px, 1px 100%;
 }
-/* トップの支援メニューは、押すと該当分野の詳細へ飛ぶ */
-a.card{text-decoration:none;color:inherit;display:block}
-.cgo{
+/* カードそのものはリンクにしない。押せるのはこの1行だけ */
+a.cgo{
   display:inline-flex;align-items:center;gap:8px;margin-top:18px;
   font-size:13px;letter-spacing:.08em;color:var(--gold);
+  text-decoration:none;position:relative;padding-bottom:3px;
 }
-.cgo i{font-style:normal;transition:transform .45s var(--ease)}
-a.card:hover .cgo i{transform:translateX(4px)}
+a.cgo i{font-style:normal;transition:transform .45s var(--ease)}
+a.cgo::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold-2);
+  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
+}
+a.cgo:hover::after{transform:scaleX(1)}
+a.cgo:hover i{transform:translateX(4px)}
+.sbar a.cgo{margin-top:0}
 
 .card .idx{
   font-family:"Optima","Palatino Linotype","Georgia",serif;
@@ -422,9 +428,9 @@ a.card:hover .cgo i{transform:translateX(4px)}
 
 /* サービス下の帯（研修） */
 .sbar{
-  margin-top:1px;background:var(--panel);border-top:1px solid var(--hair);
-  padding:clamp(28px,3.4vw,40px) clamp(26px,3vw,42px);
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px;
+  background:var(--panel);
+  padding:clamp(26px,3vw,34px) clamp(26px,2.6vw,32px);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;
 }
 .sbar h3{margin:0 0 8px;font-size:17.5px;letter-spacing:.03em}
 .sbar p{margin:0;font-size:14.5px;color:var(--ink-2)}
@@ -747,7 +753,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* ---------- 代表者 ---------- */
 .repid{margin:0 0 30px}
-.repname{display:block;width:auto;max-width:min(268px,72vw);height:auto;margin:0 0 16px}
+/* 肩書きの行に対して大きくなりすぎないところで止める */
+.repname{display:block;width:auto;max-width:min(200px,56vw);height:auto;margin:0 0 14px}
 /* 規約類の小見出し。h2.sec は大きすぎるので別に持つ */
 .polh{
   font-family:var(--min);font-weight:600;font-size:19px;letter-spacing:.04em;
@@ -877,6 +884,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .card .cc,.chips li,.mrec,.note-s,.actnote,.fieldhint,.replynote,
   .formnote,.reprole,.fmsg,.mctan{font-size:16px}
   .repnote{font-size:14px}
+  /* 指で押せる高さを確保する */
+  a.cgo{font-size:14px;padding:8px 0 10px}
   .toc a{font-size:15.5px}
 }
 
@@ -1007,18 +1016,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bline"></span>
         </div>
         <div class="grid g3">
-          <a class="card" href="#service" data-go="service" data-anchor="m1">
+          <div class="card">
             <h3>新商品・サービスを形にする</h3>
             <p class="cc mincho"><span class="ph">アイデアを、</span><span class="ph">「判断できる商品案」へ。</span></p>
             <p>顧客ニーズ、商品コンセプト、原価、製造条件を一つずつ整理し、売れそう・つくれそう・利益が出そうを確かめながら道筋を組み立てます。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
-          <a class="card" href="#service" data-go="service" data-anchor="m2">
+            <a class="cgo" href="#service" data-go="service" data-anchor="m1">詳しく見る<i>&rarr;</i></a>
+          </div>
+          <div class="card">
             <h3>原価と価格を見直す</h3>
             <p class="cc mincho"><span class="ph">「売れている」から、</span><span class="ph">「儲かっている」へ。</span></p>
             <p>商品・取引ごとの採算を整理し、どこで利益が失われているのか、いくらで売れば必要な利益が残るのかを数字で確認します。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
+            <a class="cgo" href="#service" data-go="service" data-anchor="m2">詳しく見る<i>&rarr;</i></a>
+          </div>
         </div>
       </div>
 
@@ -1029,18 +1038,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bline"></span>
         </div>
         <div class="grid g3">
-          <a class="card" href="#service" data-go="service" data-anchor="m3">
+          <div class="card">
             <h3>現場のデータから改善点を見つける</h3>
             <p class="cc mincho"><span class="ph">「忙しい」を、</span><span class="ph">改善できる数字に変えます。</span></p>
             <p>作業時間、生産量、不良、停止を整理し、どこで時間・人・材料が失われているのかを見えるようにします。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
-          <a class="card" href="#service" data-go="service" data-anchor="m4">
+            <a class="cgo" href="#service" data-go="service" data-anchor="m3">詳しく見る<i>&rarr;</i></a>
+          </div>
+          <div class="card">
             <h3>生産の流れを整える</h3>
             <p class="cc mincho"><span class="ph">「頑張って回す現場」から、</span><span class="ph">「仕組みで回る現場」へ。</span></p>
             <p>作業の流れ、時間、人員、設備、レイアウトを確認し、今ある人・設備・スペースを活かして無理なく流れる方法を考えます。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
+            <a class="cgo" href="#service" data-go="service" data-anchor="m4">詳しく見る<i>&rarr;</i></a>
+          </div>
         </div>
       </div>
 
@@ -1051,26 +1060,35 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
           <span class="bline"></span>
         </div>
         <div class="grid g3">
-          <a class="card" href="#service" data-go="service" data-anchor="m5">
+          <div class="card">
             <h3>AI・デジタルを仕事に使う</h3>
             <p class="cc mincho">「どの仕事を楽にできるか」から考えます。</p>
             <p>時間のかかる作業、繰り返している作業を見つけます。既製のサービスで足りなければ、必要な範囲で業務に合わせたツールをつくります。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
-          <a class="card" href="#service" data-go="service" data-anchor="m6">
+            <a class="cgo" href="#service" data-go="service" data-anchor="m5">詳しく見る<i>&rarr;</i></a>
+          </div>
+          <div class="card">
             <h3>補助金を活用して投資する</h3>
             <p class="cc mincho"><span class="ph">補助金ありきではなく、</span><span class="ph">「何を実現したいか」から。</span></p>
             <p>投資の目的、費用、期待する効果、収益への影響を整理したうえで、活用できる公的支援制度があるかを検討します。</p>
-            <span class="cgo">詳しく見る<i>&rarr;</i></span>
-          </a>
+            <a class="cgo" href="#service" data-go="service" data-anchor="m6">詳しく見る<i>&rarr;</i></a>
+          </div>
         </div>
       </div>
-      <div class="sbar" data-r>
-        <div>
-          <h3>研修・セミナーのご依頼</h3>
-          <p>現場改善の基礎、品質管理の考え方。新商品開発のやり方など。</p>
+      <div class="bundle" data-r>
+        <div class="bhead">
+          <span class="bnum">&mdash;</span>
+          <h3>研修・セミナー</h3>
+          <span class="bline"></span>
         </div>
-        <a class="btn btn-s" href="#service" data-go="service" data-anchor="m7"><span>詳しく見る</span></a>
+        <div class="grid">
+          <div class="sbar">
+            <div>
+              <h3>研修・セミナーのご依頼</h3>
+              <p>現場改善の考え方、新商品開発手法、現場で使えるAI活用法。</p>
+            </div>
+            <a class="cgo" href="#service" data-go="service" data-anchor="m7">詳しく見る<i>&rarr;</i></a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
