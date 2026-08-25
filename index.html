@@ -147,7 +147,7 @@ body{
    auto-phrase は対応ブラウザだけで効き、未対応では無視される（害はない） */
 .ph{display:inline-block}
 h1,h2.sec,.creed .pull,.card h3,.card .cc,.mcatch,.menu h3,.essor p,
-.cta h2,.closing,.bhead h3,.tool h4,.n,.phead h1,.toc a,.story .tate,
+.cta h2,.closing,.bhead h3,.tool h4,.n,.phead h1,.ac > summary,.story .tate,
 .note-s,.menu > p,.mcols li,.deflist dd,.job p,.story p{
   word-break:auto-phrase;
 }
@@ -403,10 +403,12 @@ html.js .hero.ready .sub,html.js .hero.ready .actions,html.js .hero.ready .actno
   background-size:100% 1px, 1px 100%, 100% 1px, 1px 100%;
 }
 /* カードそのものはリンクにしない。押せるのはこの1行だけ */
+.card{display:flex;flex-direction:column}
 a.cgo{
-  display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+  display:inline-flex;align-items:center;gap:8px;
+  align-self:flex-end;margin-top:auto;padding:20px 0 3px;
   font-size:13px;letter-spacing:.08em;color:var(--gold);
-  text-decoration:none;position:relative;padding-bottom:3px;
+  text-decoration:none;position:relative;
 }
 a.cgo i{font-style:normal;transition:transform .45s var(--ease)}
 a.cgo::after{
@@ -415,7 +417,7 @@ a.cgo::after{
 }
 a.cgo:hover::after{transform:scaleX(1)}
 a.cgo:hover i{transform:translateX(4px)}
-.sbar a.cgo{margin-top:0}
+.sbar a.cgo{margin-top:0;padding-top:0;align-self:center}
 
 .card .idx{
   font-family:"Optima","Palatino Linotype","Georgia",serif;
@@ -540,42 +542,48 @@ footer a:hover::after{transform:scaleX(1)}
 .phead p{color:var(--ink-2);font-size:15.5px;margin:0;max-width:660px}
 .phead p b{color:var(--ink);font-weight:600}
 
-/* 目次 —— 横罫線のみ。項目数が奇数でも崩れない */
-.toc{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  column-gap:clamp(28px,5vw,64px);
-  margin:clamp(44px,6vw,72px) 0 0;
-  border-top:1px solid var(--hair-2);
-}
-.toc a{
-  position:relative;display:flex;gap:16px;align-items:baseline;
-  padding:19px 2px;text-decoration:none;color:var(--ink);
-  font-size:14.5px;line-height:1.85;
-  border-bottom:1px solid var(--hair-2);
+/* 支援メニュー —— 見出しの一覧を並べ、押した項目だけを開く。
+   details/summary を使っているので、スクリプトが動かなくても開閉できる */
+.ac{border-bottom:1px solid var(--hair-2);scroll-margin-top:110px}
+.ac + .ac{border-top:0}
+.ac > summary{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:center;gap:clamp(12px,1.4vw,18px);
+  padding:clamp(20px,2.2vw,26px) 2px;
+  color:var(--ink);font-size:clamp(15.5px,1.5vw,17px);line-height:1.7;
   transition:color .4s var(--ease);
 }
-.toc a::after{
-  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--gold);
-  transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease);
+.ac > summary::-webkit-details-marker{display:none}
+.ac > summary::marker{content:""}
+.ac > summary:hover{color:var(--gold)}
+.ac[open] > summary{color:var(--gold)}
+.ac > summary b{
+  font-family:var(--lat);font-size:11.5px;letter-spacing:.16em;
+  color:var(--gold);flex:none;font-weight:400;
 }
-.toc a:hover{color:var(--gold)}
-.toc a:hover::after{transform:scaleX(1)}
-.toc a b{
-  font-family:"Optima","Palatino Linotype","Georgia",serif;
-  font-size:11.5px;letter-spacing:.16em;color:var(--gold);flex:none;
+.ac > summary .actitle{flex:1;min-width:0}
+/* 下向きの山形。開くと上を向く */
+.ac > summary .chev{
+  flex:none;width:9px;height:9px;margin:0 4px 4px 8px;
+  border-right:1px solid var(--gold);border-bottom:1px solid var(--gold);
+  transform:rotate(45deg);
+  transition:transform .45s var(--ease);
 }
-/* 目次の束見出し。2カラムを全幅で分断するので、束ごとに2枚ずつ収まる */
+.ac[open] > summary .chev{transform:rotate(-135deg) translate(-3px,-3px)}
+.menu.acbody{padding:0 0 clamp(36px,4.2vw,52px);border-bottom:0;scroll-margin-top:0}
+.menu.acbody > p:first-child{margin-top:0}
+
+/* 束の見出し */
 .tocg{
-  grid-column:1/-1;margin:0;padding:26px 2px 9px;
+  margin:0;padding:clamp(30px,3.6vw,46px) 2px 12px;
   display:flex;align-items:baseline;gap:11px;
   font-family:var(--min);font-size:15.5px;letter-spacing:.04em;color:var(--sub);
 }
+.tocg:first-of-type{padding-top:0}
 .tocg i{
   font-style:normal;font-family:var(--lat);
   font-size:11.5px;letter-spacing:.16em;color:var(--gold);flex:none;
 }
-.toc > .tocg:first-child{padding-top:16px}
-@media (max-width:760px){ .toc{grid-template-columns:1fr} }
 
 /* 支援メニュー詳細 */
 .menu{padding:clamp(58px,7vw,92px) 0;border-bottom:1px solid var(--hair-2);scroll-margin-top:110px}
@@ -723,7 +731,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 .tlink:hover::after{transform:scaleX(1)}
 .tlink:hover i{transform:translateX(4px)}
-.actnote{font-size:13px;color:var(--ink-3);line-height:1.95;margin:28px 0 0;max-width:560px}
+/* ボタンの邪魔をしない大きさに抑える */
+.actnote{font-size:12px;color:var(--ink-3);line-height:1.9;margin:26px 0 0;max-width:560px}
 
 /* ---------- 経歴の要点（ファーストビュー直下） ----------
    数字を大きく見せる帯にはしない。事実を横に並べ、罫で仕切るだけにとどめる */
@@ -881,12 +890,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
      （.vlabel .mlabel .eyebrow .expsrc .tag .blocklabel と各定義リストの見出し） */
   .lead,.sub,.card p,.tool p,.menu > p,.mcols ul,.creed p.q,.band p,p.t,
   .story p,.deflist,.job p,.cta p,.phead p,.tier dd,.flow span,.sbar p,
-  .card .cc,.chips li,.mrec,.note-s,.actnote,.fieldhint,.replynote,
+  .card .cc,.chips li,.mrec,.note-s,.fieldhint,.replynote,
   .formnote,.reprole,.fmsg,.mctan{font-size:16px}
   .repnote{font-size:14px}
+  .actnote{font-size:13px}
   /* 指で押せる高さを確保する */
   a.cgo{font-size:14px;padding:8px 0 10px}
-  .toc a{font-size:15.5px}
+  .ac > summary{font-size:16px}
 }
 
 /* ---------- 印刷 ---------- */
@@ -1225,42 +1235,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       課題を整理して終わるのではなく、<b>次に何をするかが分かるところまで具体化します。</b><br>
       ご相談内容に応じて、現状分析、データ整理、検討資料やツールの作成など、実際に使える形でお渡しします。
     </p>
-    <nav class="toc" aria-label="支援メニューの一覧">
-      <p class="tocg"><i>Ⅰ</i>売上と利益をつくる</p>
-      <a href="#m1" data-anchor="m1"><b>01</b>新しい商品・サービスを形にしたい</a>
-      <a href="#m2" data-anchor="m2"><b>02</b>原価と価格を見直して、利益を残したい</a>
-      <p class="tocg"><i>Ⅱ</i>現場を整える</p>
-      <a href="#m3" data-anchor="m3"><b>03</b>現場のデータから、改善する場所を見つけたい</a>
-      <a href="#m4" data-anchor="m4"><b>04</b>生産の流れを整えたい</a>
-      <p class="tocg"><i>Ⅲ</i>仕組みに投資する</p>
-      <a href="#m5" data-anchor="m5"><b>05</b>AIやデジタルツールを、仕事に使える形にしたい</a>
-      <a href="#m6" data-anchor="m6"><b>06</b>補助金も活用しながら、新しい取り組みを進めたい</a>
-      <p class="tocg"><i>—</i>研修・セミナー</p>
-      <a href="#m7" data-anchor="m7"><b>07</b>研修・セミナーを依頼したい</a>
-    </nav>
   </div>
 
-  <section class="sunk">
-    <div class="wrap split">
-      <p class="vlabel">Flow</p>
-      <div>
-        <h2 class="sec mincho" data-r>ご相談から支援開始まで</h2>
-      <ol class="flow" data-r data-d="1">
-        <li><b>お問い合わせ</b><span>フォームからご連絡ください。お電話は在職中のため、メールでのやり取りをお願いしています。</span></li>
-        <li><b>初回60分の無料相談</b><span>オンラインまたは訪問で、現在のお困りごとをうかがいます。費用はかかりません。</span></li>
-        <li><b>課題と支援範囲の整理</b><span>何から手を付けるか、どこまでを一緒に進めるかを整理します。</span></li>
-        <li><b>内容・費用・スケジュールの提示</b><span>支援の内容、お渡しするもの、費用、期間を書面でお示しします。</span></li>
-        <li><b>合意後に支援開始</b><span>ご納得いただいてから着手します。この段階までは費用は発生しません。</span></li>
-      </ol>
-      </div>
-    </div>
-  </section>
-
-  <div class="wrap">
-
-    <article class="menu" id="m1" data-r>
-      <p class="mnum">01</p>
-      <h3 class="mincho">新しい商品・サービスを形にしたい</h3>
+  <section style="padding-top:clamp(38px,5vw,60px)">
+    <div class="wrap">
+      <p class="lead" data-r style="margin-bottom:clamp(22px,3vw,34px)">
+        気になる項目を選ぶと、内容が開きます。
+      </p>
+      <p class="tocg"><i>Ⅰ</i>売上と利益をつくる</p>
+      <details class="ac" id="m1" data-r>
+        <summary>
+          <b>01</b>
+          <span class="actitle">新しい商品・サービスを形にしたい</span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">アイデアを、</span><span class="ph">「判断できる商品案」へ。</span></p>
       <p>「こんな商品があれば」というアイデアだけでは、商品化には進めません。</p>
       <p>顧客ニーズ、商品コンセプト、原価、製造条件を一つずつ整理し、<b>売れそう・つくれそう・利益が出そう</b>を確かめながら、商品化までの道筋を組み立てます。</p>
@@ -1307,11 +1296,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="商品・サービスの開発について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m2" data-r>
-      <p class="mnum">02</p>
-      <h3 class="mincho"><span class="ph">原価と価格を見直して、</span><span class="ph">利益を残したい</span></h3>
+        </div>
+      </details>
+      <details class="ac" id="m2" data-r>
+        <summary>
+          <b>02</b>
+          <span class="actitle"><span class="ph">原価と価格を見直して、</span><span class="ph">利益を残したい</span></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">「売れている」から、</span><span class="ph">「儲かっている」へ。</span></p>
       <p>材料費、人件費、エネルギー費、物流費が上がれば、同じ価格で売り続けるほど利益は減ります。</p>
       <p>商品・取引ごとの採算を整理し、<b>どこで利益が失われているのか、いくらで売れば必要な利益が残るのか</b>を数字で確認します。価格改定の根拠も整理します。</p>
@@ -1359,11 +1352,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="原価・価格について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m3" data-r>
-      <p class="mnum">03</p>
-      <h3 class="mincho"><span class="ph">現場のデータから、</span><span class="ph">改善する場所を見つけたい</span></h3>
+        </div>
+      </details>
+      <p class="tocg"><i>Ⅱ</i>現場を整える</p>
+      <details class="ac" id="m3" data-r>
+        <summary>
+          <b>03</b>
+          <span class="actitle"><span class="ph">現場のデータから、</span><span class="ph">改善する場所を見つけたい</span></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">「忙しい」を、</span><span class="ph">改善できる数字に変えます。</span></p>
       <p>「忙しい」「効率が悪い」。現場で感じている問題も、数字にすると改善する場所が見えてきます。</p>
       <p>作業時間、生産量、不良率、停止時間を整理し、<b>どこで時間・人・材料が失われているのか</b>を見えるようにします。必要に応じて実際に作業時間を測り、動画で作業を分析します。</p>
@@ -1409,11 +1407,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="現場改善・生産性について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m4" data-r>
-      <p class="mnum">04</p>
-      <h3 class="mincho">生産の流れを整えたい</h3>
+        </div>
+      </details>
+      <details class="ac" id="m4" data-r>
+        <summary>
+          <b>04</b>
+          <span class="actitle">生産の流れを整えたい</span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">「頑張って回す現場」から、</span><span class="ph">「仕組みで回る現場」へ。</span></p>
       <p>人によってやり方が違う。仕掛品がたまる。次の工程を待つ。小さな詰まりが重なるほど、現場全体の生産性は落ちます。</p>
       <p>作業の流れ、時間、人員、設備、レイアウトを確認し、<b>今ある人・設備・スペースを活かして無理なく流れる方法</b>を考えます。</p>
@@ -1461,11 +1463,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="現場改善・生産性について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m5" data-r>
-      <p class="mnum">05</p>
-      <h3 class="mincho"><span class="ph">AIやデジタルツールを、</span><span class="ph">仕事に使える形にしたい</span></h3>
+        </div>
+      </details>
+      <p class="tocg"><i>Ⅲ</i>仕組みに投資する</p>
+      <details class="ac" id="m5" data-r>
+        <summary>
+          <b>05</b>
+          <span class="actitle"><span class="ph">AIやデジタルツールを、</span><span class="ph">仕事に使える形にしたい</span></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">「何ができるか」より、</span><span class="ph">「どの仕事を楽にできるか」から考えます。</span></p>
       <p>AIやデジタルツールは、導入すること自体が目的ではありません。</p>
       <p>記録、転記、集計、資料作成、情報検索。日々の仕事の中で、時間がかかっている作業や繰り返しの作業を見つけます。</p>
@@ -1510,11 +1517,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="AI・デジタル活用について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m6" data-r>
-      <p class="mnum">06</p>
-      <h3 class="mincho"><span class="ph">補助金も活用しながら、</span><span class="ph">新しい取り組みを進めたい</span></h3>
+        </div>
+      </details>
+      <details class="ac" id="m6" data-r>
+        <summary>
+          <b>06</b>
+          <span class="actitle"><span class="ph">補助金も活用しながら、</span><span class="ph">新しい取り組みを進めたい</span></span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">補助金ありきではなく、</span><span class="ph">「何を実現したいか」から考えます。</span></p>
       <p>まず整理するのは、「どの補助金を使うか」ではなく、<b>何のために投資し、会社をどう良くしたいのか</b>です。</p>
       <p>投資の目的、費用、期待する効果、収益への影響、実施スケジュールを整理したうえで、活用できる公的支援制度があるかを検討します。</p>
@@ -1561,11 +1572,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="設備投資・補助金について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-
-    <article class="menu" id="m7" data-r>
-      <p class="mnum">07</p>
-      <h3 class="mincho">研修・セミナーを依頼したい</h3>
+        </div>
+      </details>
+      <p class="tocg"><i>&mdash;</i>研修・セミナー</p>
+      <details class="ac" id="m7" data-r>
+        <summary>
+          <b>07</b>
+          <span class="actitle">研修・セミナーを依頼したい</span>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="menu acbody">
       <p class="mcatch"><span class="ph">現場の言葉で、</span><span class="ph">伝わるまで話します。</span></p>
       <p>共通の言葉がないまま改善活動を始めると、途中で止まります。品質管理も生産管理も、まず「何を見ればよいか」が揃っていることが前提です。</p>
       <p>受講される方の経験と業務に合わせて内容を組み、演習を入れながら、<b>自社の現場に置き換えて考えられるところまで</b>進めます。</p>
@@ -1611,8 +1627,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
         <a class="btn btn-p" href="#contact" data-go="contact" data-kind="研修・セミナーの依頼について"><span>この課題について相談する</span></a>
         <span class="mctan">初回60分無料</span>
       </div>
-    </article>
-  </div>
+        </div>
+      </details>
+    </div>
+  </section>
 
   <section class="sunk">
     <div class="wrap split">
@@ -2054,6 +2072,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
     var el = document.getElementById(id);
     if(!el) return;
     el.classList.add('in');
+    /* 開閉式の項目なら、移動する前に開いておく */
+    if(el.tagName === 'DETAILS'){ el.open = true; }
     el.scrollIntoView({behavior: (instant || reduce) ? 'auto' : 'smooth', block:'start'});
   }
 
@@ -2108,8 +2128,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       if(t.dataset.kind){ setKind(t.dataset.kind); }
       return;
     }
-    var a = e.target.closest('.toc [data-anchor]');
-    if(a){ e.preventDefault(); scrollTo(a.dataset.anchor); return; }
     var sc = e.target.closest('[data-scroll]');
     if(sc){ e.preventDefault(); scrollTo(sc.dataset.scroll); }
   });
@@ -2177,6 +2195,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
       ticking = false;
     });
   }
+  /* 印刷するときは、閉じている項目も開いて全文を出す */
+  addEventListener('beforeprint', function(){
+    document.querySelectorAll('details').forEach(function(d){ d.open = true; });
+  });
+
   addEventListener('scroll', onScroll, {passive:true});
   onScroll();
 
