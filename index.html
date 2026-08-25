@@ -388,7 +388,7 @@ html.js .hero.ready .sub,html.js .hero.ready .actions,html.js .hero.ready .actno
 
 /* ホバー時、4辺が同時に走る。下は左→右、右は下→上、上は右→左、左は上→下。
    回転対称に描かれるので、枠が一周するように見える */
-.card::after,.tool::after{
+.card::after,.tool::after,.sbar::after{
   content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
   background-image:
     linear-gradient(var(--gold),var(--gold)),
@@ -400,7 +400,7 @@ html.js .hero.ready .sub,html.js .hero.ready .actions,html.js .hero.ready .actno
   background-size:0 1px, 1px 0, 0 1px, 1px 0;
   transition:background-size .8s var(--ease);
 }
-.card:hover::after,.tool:hover::after{
+.card:hover::after,.tool:hover::after,.sbar:hover::after{
   background-size:100% 1px, 1px 100%, 100% 1px, 1px 100%;
 }
 /* カードそのものはリンクにしない。押せるのはこの1行だけ */
@@ -431,7 +431,7 @@ a.cgo:hover i{transform:translateX(4px)}
 
 /* サービス下の帯（研修） */
 .sbar{
-  background:var(--panel);
+  position:relative;background:var(--panel);
   padding:clamp(26px,3vw,34px) clamp(26px,2.6vw,32px);
   display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;
 }
@@ -1988,7 +1988,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,s
         <p>
           代表／中小企業診断士<br>
           岡山県中小企業診断士協会 所属<br>
-          岡山県を中心に訪問、オンラインは全国から承ります。
+          <span class="ph">岡山県を中心に訪問、</span><span class="ph">オンラインは全国から承ります。</span>
         </p>
       </div>
       <div class="fnav">
