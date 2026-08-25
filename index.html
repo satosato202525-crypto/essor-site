@@ -816,25 +816,35 @@ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,s
 /* ---------- 料金の区分 ---------- */
 .tiers{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));
-  gap:1px;background:var(--hair);margin:clamp(34px,4vw,48px) 0 0;
+  gap:clamp(14px,1.6vw,20px);margin:clamp(34px,4vw,48px) 0 0;
 }
-.tier{background:var(--panel);padding:clamp(26px,2.8vw,34px);display:flex;flex-direction:column}
+/* 隙間に地の色を透かす作りだと角を丸めたときに隅が残る。
+   枠線をカード自身に持たせ、間を空ける */
+.tier{
+  background:var(--panel);border:1px solid var(--hair);border-radius:5px;
+  padding:clamp(28px,3vw,36px);display:flex;flex-direction:column;
+}
 .tier h3{
-  font-family:var(--min);font-weight:600;font-size:19px;letter-spacing:.04em;
-  margin:0 0 20px;line-height:1.6;color:var(--ink);
+  font-family:var(--min);font-weight:600;font-size:21.5px;letter-spacing:.04em;
+  margin:0 0 22px;line-height:1.6;color:var(--ink);
 }
 .tier dl{margin:0 0 22px;flex:1}
-.tier dt{font-size:11px;letter-spacing:.16em;color:var(--gold);margin:17px 0 4px;line-height:1.7}
+.tier dt{font-size:12px;letter-spacing:.16em;color:var(--gold);margin:18px 0 5px;line-height:1.7}
 .tier dt:first-of-type{margin-top:0}
-.tier dd{margin:0;color:var(--ink-2);font-size:14.5px;line-height:1.95}
-.price{border-top:1px solid var(--hair-2);padding-top:17px;margin:0}
-.price .plabel{display:block;font-size:11px;letter-spacing:.16em;color:var(--gold);margin-bottom:6px}
-/* 金額だけを大きく。<b> で囲んだ部分が明朝で立ち上がる */
-.price .pval{font-size:14.5px;color:var(--ink);line-height:1.85}
+.tier dd{margin:0;color:var(--ink-2);font-size:16px;line-height:1.9}
+.price{border-top:1px solid var(--hair-2);padding-top:19px;margin:0}
+.price .plabel{display:block;font-size:12px;letter-spacing:.16em;color:var(--gold);margin-bottom:7px}
+/* 金額だけを大きく。<b> で囲んだ部分が明朝で立ち上がる。
+   金額の無いカードは行が低くなり、下ぞろえだと罫線の位置がずれるので、
+   最低の高さを決めて3枚をそろえる */
+.price .pval{
+  display:block;font-size:16px;color:var(--ink);line-height:1.6;
+  min-height:38px;
+}
 .price .pval b{
-  font-family:var(--min);font-weight:600;font-size:22px;
+  font-family:var(--min);font-weight:600;font-size:23px;line-height:1.6;
   letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink);
-  margin-right:.05em;
+  margin-right:.04em;
 }
 
 /* ---------- 各支援分野の相談導線 ---------- */
@@ -1670,7 +1680,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,s
           </dl>
           <p class="price">
             <span class="plabel">料金</span>
-            <span class="pval"><b>1時間 10,000円</b>〜</span>
+            <span class="pval"><b>10,000円</b>〜／時間</span>
           </p>
         </div>
         <div class="tier">
