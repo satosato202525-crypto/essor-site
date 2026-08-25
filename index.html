@@ -829,7 +829,13 @@ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,s
 .tier dd{margin:0;color:var(--ink-2);font-size:14.5px;line-height:1.95}
 .price{border-top:1px solid var(--hair-2);padding-top:17px;margin:0}
 .price .plabel{display:block;font-size:11px;letter-spacing:.16em;color:var(--gold);margin-bottom:6px}
+/* 金額だけを大きく。<b> で囲んだ部分が明朝で立ち上がる */
 .price .pval{font-size:14.5px;color:var(--ink);line-height:1.85}
+.price .pval b{
+  font-family:var(--min);font-weight:600;font-size:22px;
+  letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ink);
+  margin-right:.05em;
+}
 
 /* ---------- 各支援分野の相談導線 ---------- */
 .mcta{
@@ -1651,58 +1657,64 @@ button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,s
         <div class="tier">
           <h3>スポット相談</h3>
           <dl>
-            <dt>対象</dt>
-            <dd>特定の課題について、まず考え方や進め方を整理したい方</dd>
+            <dt>こんな方に</dt>
+            <dd>特定の課題について、まず考え方や進め方を整理したい</dd>
             <dt>支援内容</dt>
-            <dd>オンラインまたは訪問での相談、その場での論点整理、次に取るべき手順の提示</dd>
+            <dd>課題の整理、原因や論点の確認、進め方の助言</dd>
             <dt>期間</dt>
-            <dd>1回（60〜120分）</dd>
-            <dt>成果物</dt>
-            <dd>相談内容と論点の整理メモ</dd>
+            <dd>60〜120分／1回</dd>
+            <dt>頻度</dt>
+            <dd>1回</dd>
+            <dt>主な成果</dt>
+            <dd>課題と論点の整理、次にやることの明確化</dd>
           </dl>
-        <p class="price">
-          <span class="plabel">料金</span>
-          <span class="pval">内容を確認後、事前にお見積りします</span>
-        </p>
+          <p class="price">
+            <span class="plabel">料金</span>
+            <span class="pval"><b>1時間 10,000円</b>〜</span>
+          </p>
         </div>
         <div class="tier">
           <h3>短期プロジェクト支援</h3>
           <dl>
-            <dt>対象</dt>
-            <dd>課題がはっきりしていて、決められた範囲で結果まで出したい方</dd>
+            <dt>こんな方に</dt>
+            <dd>課題が明確で、一定期間で具体的な成果につなげたい</dd>
             <dt>支援内容</dt>
-            <dd>現状分析、データ整理、検討資料やツールの作成、実行手順の設計</dd>
+            <dd>現状分析、データ整理、改善案の検討、資料・ツール作成、実行支援</dd>
             <dt>期間</dt>
             <dd>1〜3か月程度</dd>
-            <dt>成果物</dt>
-            <dd>各支援分野の「主な成果物」に挙げているもの</dd>
+            <dt>頻度</dt>
+            <dd>月1〜2回程度</dd>
+            <dt>主な成果</dt>
+            <dd>各支援分野に記載する成果物・改善案・実行手順</dd>
           </dl>
-        <p class="price">
-          <span class="plabel">料金</span>
-          <span class="pval">内容を確認後、事前にお見積りします</span>
-        </p>
+          <p class="price">
+            <span class="plabel">料金</span>
+            <span class="pval"><b>80,000円</b>〜／月</span>
+          </p>
         </div>
         <div class="tier">
           <h3>継続的な伴走支援</h3>
           <dl>
-            <dt>対象</dt>
-            <dd>改善を社内に定着させたい方、複数の課題を順に進めたい方</dd>
+            <dt>こんな方に</dt>
+            <dd>改善を社内に定着させたい、複数の課題を継続して進めたい</dd>
             <dt>支援内容</dt>
-            <dd>定例での打ち合わせ、進捗の確認、その都度の資料作成と助言</dd>
+            <dd>定例ミーティング、進捗確認、課題整理、分析・資料作成、次の打ち手の検討</dd>
             <dt>期間</dt>
-            <dd>6か月〜（月1〜2回を目安）</dd>
-            <dt>成果物</dt>
-            <dd>打ち合わせ記録、都度の検討資料</dd>
+            <dd>6か月〜</dd>
+            <dt>頻度</dt>
+            <dd>月1〜2回程度</dd>
+            <dt>主な成果</dt>
+            <dd>改善活動の継続、課題管理、社内で改善を進める仕組みづくり</dd>
           </dl>
-        <p class="price">
-          <span class="plabel">料金</span>
-          <span class="pval">内容を確認後、事前にお見積りします</span>
-        </p>
+          <p class="price">
+            <span class="plabel">料金</span>
+            <span class="pval">内容・工数を確認後、お見積り</span>
+          </p>
         </div>
       </div>
       <p class="note-s" data-r>
-        <span class="ph">※ どの区分に当てはまるかを含めて、初回の無料相談で一緒に整理します。</span>
-        <span class="ph">区分を決めてからご連絡いただく必要はありません。</span>
+        <span class="ph">※ 掲載している料金は目安です。</span><span class="ph">実際の費用は、支援内容や期間、工数などを確認したうえで、</span><span class="ph">事前にお見積りいたします。</span><span class="ph">なお、消費税・交通費等は含まれておりません。</span><span class="ph">詳細はお見積書にてご確認ください。</span><br>
+        <span class="ph">※ どの区分に当てはまるかを含めて、初回の無料相談で一緒に整理します。</span><span class="ph">区分を決めてからご連絡いただく必要はありません。</span>
       </p>
     </div>
   </section>
